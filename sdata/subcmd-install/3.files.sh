@@ -223,10 +223,8 @@ case "${EXPERIMENTAL_FILES_SCRIPT}" in
   *)source sdata/subcmd-install/3.files-legacy.sh;;
 esac
 
-if [[ ! "$OS_GROUP_ID" == "fedora" ]]; then
-  showfun install_google_sans_flex
-  v install_google_sans_flex
-fi
+showfun install_google_sans_flex
+v install_google_sans_flex
 
 #####################################################################################
 
