@@ -193,7 +193,7 @@ Tips:
   - Used in Hyprland config.
 - `libqalculate`
   - Used in Quickshell config, providing math ability in searchbar.
-  - Note that `qalc` is the needed executable. In Arch Linux [libqalculate](https://archlinux.org/packages/extra/x86_64/libqalculate) provides it, but in Fedora [qalculate](https://packages.fedoraproject.org/pkgs/libqalculate/qalculate/fedora-43.html#files) does and [libqalculate](https://packages.fedoraproject.org/pkgs/libqalculate/libqalculate/fedora-43.html#files) does not.
+  - Note that `qalc` is the needed executable. In Arch Linux [libqalculate](https://archlinux.org/packages/extra/x86_64/libqalculate) provides it.
 
 
 # Actual packages
