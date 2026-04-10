@@ -403,41 +403,6 @@ function install_cmds(){
       v sudo pacman -Syu
       v sudo pacman -S --noconfirm --needed "${pkgs[@]}"
       ;;
-    "debian")
-      local pkgs=()
-      for cmd in "$@";do
-        # For package name which is not cmd name, use "case" syntax to replace
-        case $cmd in
-          ip) pkgs+=(iproute2);;
-          *) pkgs+=($cmd) ;;
-        esac
-      done
-      v sudo apt update -y
-      v sudo apt install -y "${pkgs[@]}"
-      ;;
-    "fedora")
-      local pkgs=()
-      for cmd in "$@";do
-        # For package name which is not cmd name, use "case" syntax to replace
-        case $cmd in
-          ip) pkgs+=(iproute);;
-          *) pkgs+=($cmd) ;;
-        esac
-      done
-      v sudo dnf install -y "${pkgs[@]}"
-      ;;
-    "suse")
-      local pkgs=()
-      for cmd in "$@";do
-        # For package name which is not cmd name, use "case" syntax to replace
-        case $cmd in
-          ip) pkgs+=(iproute2);;
-          *) pkgs+=($cmd) ;;
-        esac
-      done
-      v sudo zypper refresh
-      v sudo zypper -n install "${pkgs[@]}"
-      ;;
     *)
       printf "WARNING\n"
       printf "No method found to install package providing the commands:\n"
