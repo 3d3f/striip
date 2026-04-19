@@ -13,7 +13,7 @@ depends=(
   eza
   fish
   fontconfig
-  kitty
+  foot
   matugen
   otf-space-grotesk
   starship
