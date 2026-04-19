@@ -85,7 +85,6 @@ x ls -l ~/.local/state/quickshell/.venv
 
 #e "Checking command existence"
 #commands=(yay pacman zypper apt dnf yum)
-#commands+=(ags agsv1)
 #commands+=(Hyprland hypr{ctl,idle,lock,picker})
 #commands+=(uv)
 #for i in "${commands[@]}";do x command -v $i;done
