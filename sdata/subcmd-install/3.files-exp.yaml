@@ -9,7 +9,6 @@
 version: "1.0"
 user_preferences:
   shell: "fish" # fish | zsh
-  terminal: "foot" # kitty | foot
   keybindings: "default" # default | vim
 patterns:
   # Always install these files
@@ -33,15 +32,6 @@ patterns:
   - from: "dots/.config/foot"
     to: "$XDG_CONFIG_HOME/foot"
     mode: "sync"
-    condition:
-      type: "terminal"
-      value: "foot"
-  - from: "dots/.config/kitty"
-    to: "$XDG_CONFIG_HOME/kitty"
-    mode: "sync"
-    condition:
-      type: "terminal"
-      value: "kitty"
   # Hyprland    
   - from: "dots/.config/hypr"
     to: "$XDG_CONFIG_HOME/hypr"

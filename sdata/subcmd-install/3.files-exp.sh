@@ -28,12 +28,10 @@ wizard_update_preferences() {
 
     # Get current preferences
     current_shell=$(yq '.user_preferences.shell // "fish"' "$CONFIG_FILE")
-    current_terminal=$(yq '.user_preferences.terminal // "foot"' "$CONFIG_FILE")
     current_keybindings=$(yq '.user_preferences.keybindings // "default"' "$CONFIG_FILE")
 
     echo "Current preferences:"
     echo "  Shell: $current_shell"
-    echo "  Terminal: $current_terminal"
     echo "  Keybindings: $current_keybindings"
     echo
 
@@ -47,19 +45,6 @@ wizard_update_preferences() {
       1|"") shell="fish" ;;
       2) shell="zsh" ;;
       *) echo "Invalid choice, using fish"; shell="fish" ;;
-    esac
-
-    # Terminal selection
-    echo
-    echo "Which terminal do you prefer?"
-    echo "1) foot (default)"
-    echo "2) kitty"
-    read -p "Enter choice [1-2]: " terminal_choice
-
-    case "$terminal_choice" in
-      1|"") terminal="foot" ;;
-      2) terminal="kitty" ;;
-      *) echo "Invalid choice, using foot"; terminal="foot" ;;
     esac
 
     # Keybindings selection
@@ -77,7 +62,6 @@ wizard_update_preferences() {
 
     # Update YAML in-place
     yq -i ".user_preferences.shell = \"$shell\"" "$CONFIG_FILE"
-    yq -i ".user_preferences.terminal = \"$terminal\"" "$CONFIG_FILE"
     yq -i ".user_preferences.keybindings = \"$keybindings\"" "$CONFIG_FILE"
 
     echo

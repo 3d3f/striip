@@ -83,7 +83,7 @@ Tips:
   - Used in Fish config.
 - `ttf-jetbrains-mono-nerd`
   - Font name: `JetBrains Mono NF`, `JetBrainsMono Nerd Font`.
-  - Used in foot, kdeglobals, kitty, qt5ct, qt6ct and Quickshell config. 
+  - Used in foot, kdeglobals, qt5ct, qt6ct and Quickshell config. 
 - `ttf-material-symbols-variable-git`
   - Font name: `Material Symbols Rounded`, `Material Symbols Outlined`
   - Used in Hyprland, matugen, Quickshell and wlogout config.
