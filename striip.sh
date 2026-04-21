@@ -67,7 +67,7 @@ install_dots() {
   echo ""
   gum style --foreground 5 "Running './setup install'..."
   echo ""
-  cd "$TARGET_DIR" && ./setup install
+  cd "$TARGET_DIR" && ./setup install --force
 }
 
 # Main
