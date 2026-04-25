@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 STRIIP_REPO="https://github.com/3d3f/striip.git"
 TARGET_DIR="$HOME/.cache/striip"
@@ -47,8 +47,7 @@ sync_repo() {
     gum spin --spinner dot --title "Removing $TARGET_DIR..." -- rm -rf "$TARGET_DIR"
     echo -e "${GREEN}✔${R} Removed $TARGET_DIR"
   fi
-  gum spin --spinner dot --title "Cloning STRiiP..." -- \
-    git clone "$STRIIP_REPO" "$TARGET_DIR" -q --recurse-submodules
+  gum spin --spinner dot --title "Cloning STRiiP..." -- git clone "$STRIIP_REPO" "$TARGET_DIR" -q --recurse-submodules
   echo -e "${GREEN}✔${R} Cloned STRiiP into $TARGET_DIR"
 }
 
