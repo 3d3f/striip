@@ -107,12 +107,12 @@ function install_file__auto_backup(){
     echo -e "${STY_YELLOW}[$0]: \"$t\" already exists.${STY_RST}"
     if ${INSTALL_FIRSTRUN};then
       echo -e "${STY_BLUE}[$0]: It seems to be the firstrun.${STY_RST}"
-      v mv $t $t.old
-      v cp_file $s $t
+      v mv $t $t.bak
     else
       echo -e "${STY_BLUE}[$0]: It seems not a firstrun.${STY_RST}"
-      v cp_file $s $t.new
+      v mv $t $t.old
     fi
+    v cp_file $s $t
   else
     echo -e "${STY_GREEN}[$0]: \"$t\" does not exist yet.${STY_RST}"
     v cp_file $s $t
