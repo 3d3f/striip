@@ -4,11 +4,11 @@
 # shellcheck shell=bash
 
 #####################################################################################
-# MISC (For dots/.config/* but not quickshell, not fish, not Hyprland, not fontconfig)
+# MISC (For dots/.config/* but not quickshell, not fish, not Hyprland, not fontconfig, not matugen)
 case "${SKIP_MISCCONF}" in
   true) sleep 0;;
   *)
-    for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' -exec basename {} \;); do
+    for i in $(find dots/.config/ -mindepth 1 -maxdepth 1 ! -name 'quickshell' ! -name 'fish' ! -name 'hypr' ! -name 'fontconfig' ! -name 'matugen' -exec basename {} \;); do
 #      i="dots/.config/$i"
       echo "[$0]: Found target: dots/.config/$i"
       if [ -d "dots/.config/$i" ];then install_dir__sync "dots/.config/$i" "$XDG_CONFIG_HOME/$i"
@@ -64,5 +64,10 @@ case "${SKIP_HYPRLAND}" in
     install_dir__ignore_existing "dots/.config/hypr/custom" "${XDG_CONFIG_HOME}/hypr/custom"
     ;;
 esac
+
+# For Matugen
+install_dir__sync_exclude dots/.config/matugen "$XDG_CONFIG_HOME"/matugen "custom"
+install_dir__ignore_existing "dots/.config/matugen/custom" "${XDG_CONFIG_HOME}/matugen/custom"
+cat "$XDG_CONFIG_HOME/matugen/custom/config.toml" >> "$XDG_CONFIG_HOME/matugen/config.toml"
 
 install_file "dots/.local/share/icons/illogical-impulse.svg" "${XDG_DATA_HOME}"/icons/illogical-impulse.svg

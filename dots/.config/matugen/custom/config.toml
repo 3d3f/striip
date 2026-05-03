@@ -1,0 +1,11 @@
+# Write here your custom matugen config and put the templates in the "templates" folder in this directory. 
+# This file will be merged with the main one when you update the shell.
+# You can find some matugen themes here https://github.com/InioX/matugen-themes
+#
+# Below a kitty config and template.
+#
+# [templates.kitty]
+# input_path = '~/.config/matugen/custom/templates/kitty-colors.conf'
+# output_path = '~/.config/kitty/themes/Matugen.conf'
+# post_hook = "kitty +kitten themes --reload-in=all Matugen"
+#
