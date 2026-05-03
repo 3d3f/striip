@@ -93,7 +93,9 @@ Scope { // Scope
             property var contentParent: sidebarLeftBackground
 
             function hide() {
-                GlobalStates.sidebarLeftOpen = false
+                if (!root.pin) {
+                    GlobalStates.sidebarLeftOpen = false
+                }
             }
 
             exclusionMode: ExclusionMode.Normal
@@ -139,7 +141,7 @@ Scope { // Scope
                 anchors.left: parent.left
                 anchors.topMargin: Appearance.sizes.hyprlandGapsOut
                 anchors.leftMargin: Appearance.sizes.hyprlandGapsOut
-                width: panelWindow.sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
+                width: panelWindow.sidebarWidth - Appearance.sizes.hyprlandGapsOut * 2
                 height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
                 color: Appearance.colors.colLayer0
                 border.width: 1
