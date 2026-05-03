@@ -10,23 +10,19 @@ import qs.modules.ii.background.widgets
 
 AbstractBackgroundWidget {
     id: root
-
     configEntryName: "clock"
-
     implicitHeight: contentColumn.implicitHeight
     implicitWidth: contentColumn.implicitWidth
-
     readonly property string clockStyle: GlobalStates.screenLocked ? Config.options.background.widgets.clock.styleLocked : Config.options.background.widgets.clock.style
     readonly property bool forceCenter: (GlobalStates.screenLocked && Config.options.lock.centerClock)
     readonly property bool shouldShow: (!Config.options.background.widgets.clock.showOnlyWhenLocked || GlobalStates.screenLocked)
-    property bool wallpaperSafetyTriggered: false
     needsColText: clockStyle === "digital"
     x: forceCenter ? ((root.screenWidth - root.width) / 2) : targetX
     y: forceCenter ? ((root.screenHeight - root.height) / 2) : targetY
     visibleWhenLocked: true
 
     property var textHorizontalAlignment: {
-        if (!Config.options.background.widgets.clock.digital.adaptiveAlignment || root.forceCenter || Config.options.background.widgets.clock.digital.vertical) 
+        if (!Config.options.background.widgets.clock.digital.adaptiveAlignment || root.forceCenter || Config.options.background.widgets.clock.digital.vertical)
             return Text.AlignHCenter;
         if (root.x < root.scaledScreenWidth / 3)
             return Text.AlignLeft;
@@ -68,6 +64,7 @@ AbstractBackgroundWidget {
                 textHorizontalAlignment: root.textHorizontalAlignment
             }
         }
+
         StatusRow {
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -77,16 +74,18 @@ AbstractBackgroundWidget {
         id: statusText
         implicitHeight: statusTextBg.implicitHeight
         implicitWidth: statusTextBg.implicitWidth
+
         StyledRectangularShadow {
             target: statusTextBg
             visible: statusTextBg.visible && root.clockStyle === "cookie"
             opacity: statusTextBg.opacity
         }
+
         Rectangle {
             id: statusTextBg
             anchors.centerIn: parent
             clip: true
-            opacity: (safetyStatusText.shown || lockStatusText.shown) ? 1 : 0
+            opacity: lockStatusText.shown ? 1 : 0
             visible: opacity > 0
             implicitHeight: statusTextRow.implicitHeight + 5 * 2
             implicitWidth: statusTextRow.implicitWidth + 5 * 2
@@ -107,15 +106,10 @@ AbstractBackgroundWidget {
                 id: statusTextRow
                 anchors.centerIn: parent
                 spacing: 14
+
                 Item {
                     Layout.fillWidth: root.textHorizontalAlignment !== Text.AlignLeft
                     implicitWidth: 1
-                }
-                ClockStatusText {
-                    id: safetyStatusText
-                    shown: root.wallpaperSafetyTriggered
-                    statusIcon: "hide_image"
-                    statusText: Translation.tr("Wallpaper safety enforced")
                 }
                 ClockStatusText {
                     id: lockStatusText
@@ -139,10 +133,13 @@ AbstractBackgroundWidget {
         property color textColor: root.clockStyle === "cookie" ? Appearance.colors.colOnSecondaryContainer : root.colText
         opacity: shown ? 1 : 0
         visible: opacity > 0
+
         Behavior on opacity {
             animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
         }
+
         spacing: 4
+
         MaterialSymbol {
             id: statusIconWidget
             anchors.verticalCenter: statusTextRow.verticalCenter
@@ -151,6 +148,7 @@ AbstractBackgroundWidget {
             style: Text.Raised
             styleColor: Appearance.colors.colShadow
         }
+
         ClockText {
             id: statusTextWidget
             color: statusTextRow.textColor

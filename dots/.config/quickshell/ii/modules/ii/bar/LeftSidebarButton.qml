@@ -10,8 +10,7 @@ RippleButton {
     property bool showPing: false
 
     property bool translatorEnabled: Config.options.sidebar.translator.enable
-    property bool animeEnabled: Config.options.policies.weeb !== 0
-    visible: translatorEnabled || animeEnabled
+    visible: translatorEnabled
 
     property real buttonPadding: 5
     implicitWidth: distroIcon.width + buttonPadding * 2
@@ -26,14 +25,6 @@ RippleButton {
 
     onPressed: {
         GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
-    }
-
-    Connections {
-        target: Booru
-        function onResponseFinished() {
-            if (GlobalStates.sidebarLeftOpen) return;
-            root.showPing = true;
-        }
     }
 
     Connections {
