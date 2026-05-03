@@ -187,8 +187,6 @@ Tips:
   - Used in Hyprland and Quickshell config.
 - `songrec`
   - Used in Quickshell config.
-- `translate-shell`
-  - Used in Quickshell config.
 - `wlogout`
   - Used in Hyprland config.
 - `libqalculate`

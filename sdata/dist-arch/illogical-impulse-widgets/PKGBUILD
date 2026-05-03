@@ -13,7 +13,6 @@ depends=(
   hyprlock
   hyprpicker
   songrec
-  translate-shell
   wlogout
   libqalculate
 )

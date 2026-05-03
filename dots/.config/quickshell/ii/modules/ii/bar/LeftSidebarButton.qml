@@ -9,8 +9,7 @@ RippleButton {
 
     property bool showPing: false
 
-    property bool translatorEnabled: Config.options.sidebar.translator.enable
-    visible: translatorEnabled
+    visible: true
 
     property real buttonPadding: 5
     implicitWidth: distroIcon.width + buttonPadding * 2
