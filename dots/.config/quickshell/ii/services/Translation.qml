@@ -9,18 +9,12 @@ Singleton {
     id: root
 
     property var translations: ({})
-    property var generatedTranslations: ({})
     property var availableLanguages: ["en_US"]
-    property var availableGeneratedLanguages: []
-    property var allAvailableLanguages: {
-        const combined = new Set([...root.availableLanguages, ...root.availableGeneratedLanguages]);
-        return Array.from(combined).sort();
-    }
+    property var allAvailableLanguages: root.availableLanguages
     property bool isScanning: scanLanguagesProcess.running
     property bool isLoading: false
     property string translationKeepSuffix: "/*keep*/"
     property string translationsDir: Quickshell.shellPath("translations")
-    property string generatedTranslationsDir: Directories.shellConfig + "/translations"
 
     property string languageCode: {
         var configLang = Config?.options.language.ui ?? "auto";
@@ -39,20 +33,10 @@ Singleton {
         }
     }
 
-    TranslationScanner {
-        id: scanGeneratedLanguagesProcess
-        translationsDir: root.generatedTranslationsDir
-        onLanguagesScanned: (languages) => {
-            root.availableGeneratedLanguages = [...languages];
-        }
-    }
-
     onLanguageCodeChanged: {
         print("[Translation] Language changed to", root.languageCode);
         translationFileView.languageCode = root.languageCode;
-        generatedTranslationFileView.languageCode = root.languageCode;
         translationFileView.reread();
-        generatedTranslationFileView.reread();
     }
 
     TranslationReader {
@@ -65,26 +49,15 @@ Singleton {
         }
     }
 
-    TranslationReader {
-        id: generatedTranslationFileView
-        translationsDir: root.generatedTranslationsDir
-        languageCode: root.languageCode
-        onContentLoaded: (data) => {
-            root.generatedTranslations = data;
-            root.isLoading = false;
-        }
-    }
-
     function tr(text) {
         // Special cases
         if (!text) return "";
         var key = text.toString();
-        if (root.isLoading || (!root?.translations?.hasOwnProperty(key) && !root?.generatedTranslations?.hasOwnProperty(key)))
+        if (root.isLoading || !root?.translations?.hasOwnProperty(key))
             return key;
-        
         // Normal cases
-        var translation = root.translations[key] || root.generatedTranslations[key] || key;
-        // print(key, "-> [", root.translations[key], root.generatedTranslations[key], key, "] ->", translation);
+
+        var translation = root.translations[key] || key;
         if (translation.endsWith(root.translationKeepSuffix)) {
             translation = translation.substring(0, translation.length - root.translationKeepSuffix.length).trim();
         }
