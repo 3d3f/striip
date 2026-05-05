@@ -91,14 +91,6 @@ Singleton {
                     property real width: 0
                     property real height: 0
                 }
-                property JsonObject fpsLimiter: JsonObject {
-                    property bool pinned: false
-                    property bool clickthrough: false
-                    property real x: 1570
-                    property real y: 615
-                    property real width: 280
-                    property real height: 80
-                }
                 property JsonObject recorder: JsonObject {
                     property bool pinned: false
                     property bool clickthrough: false
