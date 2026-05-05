@@ -92,12 +92,6 @@ Scope { // Scope
             property real sidebarWidth: panelWindow.extend ? Appearance.sizes.sidebarWidthExtended : Appearance.sizes.sidebarWidth
             property var contentParent: sidebarLeftBackground
 
-            function hide() {
-                if (!root.pin) {
-                    GlobalStates.sidebarLeftOpen = false
-                }
-            }
-
             exclusionMode: ExclusionMode.Normal
             exclusiveZone: root.pin ? sidebarWidth - Appearance.sizes.elevationMargin : 0
             implicitWidth: Appearance.sizes.sidebarWidthExtended + Appearance.sizes.elevationMargin
@@ -126,7 +120,8 @@ Scope { // Scope
             Connections {
                 target: GlobalFocusGrab
                 function onDismissed() {
-                    panelWindow.hide();
+                    if (!root.pin)
+                        GlobalStates.sidebarLeftOpen = false
                 }
             }
 
@@ -154,7 +149,7 @@ Scope { // Scope
 
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Escape) {
-                        panelWindow.hide();
+                        GlobalStates.sidebarLeftOpen = false;
                     }
                     if (event.modifiers === Qt.ControlModifier) {
                         if (event.key === Qt.Key_O) {
