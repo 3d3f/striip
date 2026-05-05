@@ -19,48 +19,13 @@ Scope { // Scope
         root.detach = !root.detach;
     }
 
-    Process { // Dodge cursor away, pin, move cursor back
-        id: pinWithFunnyHyprlandWorkaroundProc
-        property var hook: null
-        property int cursorX;
-        property int cursorY;
-        function doIt() {
-            command = ["hyprctl", "cursorpos"]
-            hook = (output) => {
-                cursorX = parseInt(output.split(",")[0]);
-                cursorY = parseInt(output.split(",")[1]);
-                doIt2();
-            }
-            running = true;
-        }
-        function doIt2(output) {
-            command = ["bash", "-c", "hyprctl dispatch movecursor 9999 9999"];
-            hook = () => {
-                doIt3();
-            }
-            running = true;
-        }
-        function doIt3(output) {
-            root.pin = !root.pin;
-            command = ["bash", "-c", `sleep 0.01; hyprctl dispatch movecursor ${cursorX} ${cursorY}`];
-            hook = null
-            running = true;
-        }
-        stdout: StdioCollector {
-            onStreamFinished: {
-                pinWithFunnyHyprlandWorkaroundProc.hook(text);
-            }
-        }
-    }
-
     function togglePin() {
-        if (!root.pin) pinWithFunnyHyprlandWorkaroundProc.doIt()
-        else root.pin = !root.pin;
+        root.pin = !root.pin
     }
 
     Component.onCompleted: {
         root.sidebarContent = contentComponent.createObject(null, {
-            "scopeRoot": root,
+                "scopeRoot": root,
         });
         sidebarLoader.item.contentParent.children = [root.sidebarContent];
     }
@@ -83,11 +48,11 @@ Scope { // Scope
     Loader {
         id: sidebarLoader
         active: true
-        
+
         sourceComponent: PanelWindow { // Window
             id: panelWindow
             visible: GlobalStates.sidebarLeftOpen
-            
+
             property bool extend: false
             property real sidebarWidth: panelWindow.extend ? Appearance.sizes.sidebarWidthExtended : Appearance.sizes.sidebarWidth
             property var contentParent: sidebarLeftBackground
@@ -117,11 +82,22 @@ Scope { // Scope
                     GlobalFocusGrab.removeDismissable(panelWindow);
                 }
             }
+            
             Connections {
                 target: GlobalFocusGrab
                 function onDismissed() {
                     if (!root.pin)
-                        GlobalStates.sidebarLeftOpen = false
+                    GlobalStates.sidebarLeftOpen = false
+                }
+            }
+
+            Connections {
+                target: root
+                function onPinChanged() {
+                    if (root.pin)
+                    GlobalFocusGrab.removeDismissable(panelWindow)
+                    else if (panelWindow.visible)
+                    GlobalFocusGrab.addDismissable(panelWindow)
                 }
             }
 
@@ -179,7 +155,7 @@ Scope { // Scope
             onVisibleChanged: {
                 if (!visible) GlobalStates.sidebarLeftOpen = false;
             }
-            
+
             Rectangle {
                 id: detachedSidebarBackground
                 anchors.fill: parent
