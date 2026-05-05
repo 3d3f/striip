@@ -99,7 +99,7 @@ Scope { // Scope
             }
 
             exclusionMode: ExclusionMode.Normal
-            exclusiveZone: root.pin ? sidebarWidth : 0
+            exclusiveZone: root.pin ? sidebarWidth - Appearance.sizes.elevationMargin : 0
             implicitWidth: Appearance.sizes.sidebarWidthExtended + Appearance.sizes.elevationMargin
             WlrLayershell.namespace: "quickshell:sidebarLeft"
             // Hyprland 0.49: OnDemand is Exclusive, Exclusive just breaks click-outside-to-close
@@ -141,7 +141,7 @@ Scope { // Scope
                 anchors.left: parent.left
                 anchors.topMargin: Appearance.sizes.hyprlandGapsOut
                 anchors.leftMargin: Appearance.sizes.hyprlandGapsOut
-                width: panelWindow.sidebarWidth - Appearance.sizes.hyprlandGapsOut * 2
+                width: panelWindow.sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
                 height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
                 color: Appearance.colors.colLayer0
                 border.width: 1
