@@ -12,7 +12,6 @@ depends=(
   hypridle
   hyprlock
   hyprpicker
-  songrec
   wlogout
   libqalculate
 )

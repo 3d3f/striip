@@ -185,8 +185,6 @@ Tips:
   - Installed as fallback; its config is also included.
 - `hyprpicker`
   - Used in Hyprland and Quickshell config.
-- `songrec`
-  - Used in Quickshell config.
 - `wlogout`
   - Used in Hyprland config.
 - `libqalculate`
