@@ -12,6 +12,8 @@ QtObject {
     property real background_widgets_clock_digital_font_width: 100
     property bool background_widgets_clock_digital_showDate: true // true, false
     property bool background_widgets_clock_digital_vertical: false // true, false
+    property bool background_widgets_clock_digital_adaptiveAlignment: true // true, false
+    property string background_widgets_clock_digital_font_family: "Google Sans Flex"
     property bool background_widgets_clock_cookie_constantlyRotate: false // true, false
     property string background_widgets_clock_cookie_dateStyle: "bubble" // "hide", "rect", "bubble", "border"
     property string background_widgets_clock_cookie_dialNumberStyle: "full" // "full", "dots", "numbers", "none"
@@ -30,3 +32,4 @@ QtObject {
     property bool background_widgets_clock_digital_animateChange: true // true, false
     property bool background_widgets_clock_cookie_useSineCookie: false // true, false
 }
+
