@@ -33,6 +33,5 @@ AbstractQuickPanel {
         NightLight {}
         GameMode {}
         IdleInhibitor {}
-        CloudflareWarp {}
     }
 }
