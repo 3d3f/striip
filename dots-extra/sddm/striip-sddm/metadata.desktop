@@ -1,0 +1,13 @@
+[SddmGreeterTheme]
+Name=striip-sddm
+Description=striip-sddm-theme
+Author=3d3f
+License=GPL-3.0-or-later
+Type=sddm-theme
+Version=0.6
+ConfigFile=Themes/striip-sddm.conf
+MainScript=Main.qml
+TranslationsDirectory=translations
+Theme-Id=ii-sddm
+Theme-API=2.0
+QtVersion=6

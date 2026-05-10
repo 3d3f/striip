@@ -3,50 +3,39 @@
 ## TODO: Video wallpaper path from matugen points to thumbnail from matugen in ii, find a way to get the original video path
 set -euo pipefail
 
-# --- Security: Validate and sanitize paths ---
+# Security: Validate and sanitize paths
 validate_path() {
     local path="$1"
     local description="$2"
 
-    # Check if path exists
     if [ ! -e "$path" ]; then
         echo "Error: $description not found: $path" >&2
         return 1
     fi
 
-    # Check if it's a symbolic link (security risk)
     if [ -L "$path" ]; then
         echo "Error: $description is a symbolic link (not allowed): $path" >&2
         return 1
     fi
 
-    # Resolve to absolute path
     realpath "$path"
 }
 
-# --- Local user name ---
+# Local user name
 REAL_USER="${SUDO_USER:-$USER}"
 USER_HOME="$(eval echo "~$REAL_USER")"
 
-# Validate USER_HOME
 if [ -z "$USER_HOME" ] || [ ! -d "$USER_HOME" ]; then
     echo "Error: invalid user home directory" >&2
     exit 1
 fi
 
-# --- Directories ---
+# Directories
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC="$USER_HOME/.config/ii-sddm-theme"
-DEST="/usr/share/sddm/themes/ii-sddm-theme"
+DEST="/usr/share/sddm/themes/striip-sddm"
 
-# --- Colors.qml source ---
+# Colors.qml source
 COLORS_QML_SOURCE="$SCRIPT_DIR/Colors.qml"
-
-# Validate source directory
-if [ ! -d "$SRC" ]; then
-    echo "Error: source directory not found: $SRC" >&2
-    exit 1
-fi
 
 # Validate destination parent directory
 if [ ! -d "$(dirname "$(dirname "$DEST")")" ]; then
@@ -54,7 +43,7 @@ if [ ! -d "$(dirname "$(dirname "$DEST")")" ]; then
     exit 2
 fi
 
-# --- Extract wallpaper path (line 5) ---
+# Extract wallpaper path (line 5)
 if [ ! -f "$COLORS_QML_SOURCE" ]; then
     echo "Error: Colors.qml not found at: $COLORS_QML_SOURCE" >&2
     exit 3
@@ -85,7 +74,7 @@ if [ ! -f "$WALLPAPER_PATH" ]; then
     exit 5
 fi
 
-# --- Determine type and extension ---
+# Determine type and extension
 WALLPAPER_BASENAME="$(basename "$WALLPAPER_PATH")"
 WALLPAPER_EXT="${WALLPAPER_BASENAME##*.}"
 WALLPAPER_EXT_LOWER=$(echo "$WALLPAPER_EXT" | tr '[:upper:]' '[:lower:]')
@@ -108,10 +97,10 @@ if [ "$IS_IMAGE" = false ] && [ "$IS_VIDEO" = false ]; then
     exit 6
 fi
 
-# --- Modify ii-sddm.conf dynamically ---
-CONF_FILE="$SCRIPT_DIR/ii-sddm.conf"
+# Modify striip-sddm.conf dynamically
+CONF_FILE="$SCRIPT_DIR/striip-sddm.conf"
 if [ ! -f "$CONF_FILE" ]; then
-    echo "Error: ii-sddm.conf not found in $SCRIPT_DIR" >&2
+    echo "Error: striip-sddm.conf not found in $SCRIPT_DIR" >&2
     exit 9
 fi
 
@@ -134,7 +123,7 @@ else
         "$CONF_FILE"
 fi
 
-# --- Validate required files ---
+# Validate required files
 REQUIRED_FILES=(
     "$SCRIPT_DIR/Colors.qml"
     "$SCRIPT_DIR/Settings.qml"
@@ -152,7 +141,7 @@ for file in "${REQUIRED_FILES[@]}"; do
     fi
 done
 
-# --- Copy to destination ---
+# Copy to destination
 echo "Copying necessary files to SDDM..."
 
 sudo mkdir -p -m 755 "$DEST/Components"
@@ -162,15 +151,19 @@ sudo mkdir -p -m 755 "$DEST/Themes"
 sudo cp --no-dereference --preserve=mode,timestamps "$SCRIPT_DIR/Colors.qml" "$DEST/Components/Colors.qml"
 sudo cp --no-dereference --preserve=mode,timestamps "$SCRIPT_DIR/Settings.qml" "$DEST/Components/Settings.qml"
 sudo cp --no-dereference --preserve=mode,timestamps "$WALLPAPER_PATH" "$DEST/Backgrounds/$BACKGROUND_FILENAME"
-sudo cp --no-dereference --preserve=mode,timestamps "$CONF_FILE" "$DEST/Themes/ii-sddm.conf"
+sudo cp --no-dereference --preserve=mode,timestamps "$CONF_FILE" "$DEST/Themes/striip-sddm.conf"
 
 if [ "$IS_VIDEO" = true ]; then
     sudo cp --no-dereference --preserve=mode,timestamps "$PLACEHOLDER_TEMP" "$DEST/Backgrounds/$PLACEHOLDER_FILENAME"
     rm -f "$PLACEHOLDER_TEMP"
+    sudo chmod 644 "$DEST/Backgrounds/$PLACEHOLDER_FILENAME"
+    echo "Thumbnail generated: $PLACEHOLDER_FILENAME"
 fi
 
-sudo chmod 644 "$DEST/Components/Colors.qml" "$DEST/Components/Settings.qml" "$DEST/Backgrounds/$BACKGROUND_FILENAME" "$DEST/Themes/ii-sddm.conf"
-[ "$IS_VIDEO" = true ] && sudo chmod 644 "$DEST/Backgrounds/$PLACEHOLDER_FILENAME"
+sudo chmod 644 \
+    "$DEST/Components/Colors.qml" \
+    "$DEST/Components/Settings.qml" \
+    "$DEST/Backgrounds/$BACKGROUND_FILENAME" \
+    "$DEST/Themes/striip-sddm.conf"
 
-echo "ii-SDDM applied successfully (background: $BACKGROUND_FILENAME)"
-[ "$IS_VIDEO" = true ] && echo "Thumbnail generated: $PLACEHOLDER_FILENAME"
+echo "striip-sddm applied successfully (background: $BACKGROUND_FILENAME)"

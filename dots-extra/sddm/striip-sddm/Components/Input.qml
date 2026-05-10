@@ -62,9 +62,7 @@ RowLayout {
 
                 Layout.alignment: Qt.AlignVCenter
             }
-
         }
-
     }
 
     InputLogin {
@@ -83,7 +81,6 @@ RowLayout {
 
             resetError.start();
         }
-
         target: sddm
     }
 
@@ -94,5 +91,4 @@ RowLayout {
         onTriggered: failed = false
         running: false
     }
-
 }

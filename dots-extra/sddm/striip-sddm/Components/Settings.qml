@@ -23,7 +23,7 @@ QtObject {
     property string background_widgets_clock_cookie_secondHandStyle: "line" // "dot", "classic", "line", "hide"
     property int background_widgets_clock_cookie_sides: 14 // 0 to i dont know what is the limit, i wouldn't go too high
     property bool background_widgets_clock_cookie_timeIndicators: true // true, false
-    property string background_widgets_clock_quote_text: "Welcome to ii-sddm-theme" // "you can write anything you want"
+    property string background_widgets_clock_quote_text: "Welcome to STRiiP-sddm" // "you can write anything you want"
     property bool background_widgets_clock_quote_enable: true // true, false
     property bool lock_blur_enable: false // true, false
     property bool lock_showLockedText: true // true, false
