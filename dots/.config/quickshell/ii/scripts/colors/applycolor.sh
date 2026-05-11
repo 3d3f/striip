@@ -27,7 +27,6 @@ IFS=$'\n'
 colorlist=($colornames)     # Array of color names
 colorvalues=($colorstrings) # Array of color values
 
->>>>>>> e11d084be8f8c617506868d3824e3cf8557de4bf
 apply_anyterm() {
   # Check if terminal escape sequence template exists
   if [ ! -f "$SCRIPT_DIR/terminal/sequences.txt" ]; then
@@ -54,8 +53,7 @@ apply_anyterm() {
 }
 
 apply_term() {
-<<<<<<< HEAD
-  apply_anyterm
+  apply_anyterm &
 }
 
 # Check if terminal theming is enabled in config
