@@ -189,14 +189,6 @@ Singleton {
                 property string wallpaperPath: ""
                 property string thumbnailPath: ""
                 property bool hideWhenFullscreen: true
-                property JsonObject parallax: JsonObject {
-                    property bool vertical: false
-                    property bool autoVertical: false
-                    property bool enableWorkspace: false
-                    property real workspaceZoom: 1.07 // Relative to wallpaper size
-                    property bool enableSidebar: false
-                    property real widgetsFactor: 1.2
-                }
             }
 
             property JsonObject bar: JsonObject {
