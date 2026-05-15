@@ -102,31 +102,6 @@ hl.layer_rule({ match = { namespace = "notifications" }, blur = true})
 hl.layer_rule({ match = { namespace = "notifications" }, ignore_alpha = 0.69})
 hl.layer_rule({ match = { namespace = "logout_dialog" }, blur = true}) -- wlogout
 
--- ags
-hl.layer_rule({ match = { namespace = "sideleft.*" }, animation = "slide left"})
-hl.layer_rule({ match = { namespace = "sideright.*" }, animation = "slide right"})
-hl.layer_rule({ match = { namespace = "session[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "bar[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "bar[0-9]*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "barcorner.*" }, blur = true})
-hl.layer_rule({ match = { namespace = "barcorner.*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "dock[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "dock[0-9]*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "indicator.*" }, blur = true})
-hl.layer_rule({ match = { namespace = "indicator.*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "overview[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "overview[0-9]*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "cheatsheet[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "cheatsheet[0-9]*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "sideright[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "sideright[0-9]*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "sideleft[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "sideleft[0-9]*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "indicator.*" }, blur = true})
-hl.layer_rule({ match = { namespace = "indicator.*" }, ignore_alpha = 0.6})
-hl.layer_rule({ match = { namespace = "osk[0-9]*" }, blur = true})
-hl.layer_rule({ match = { namespace = "osk[0-9]*" }, ignore_alpha = 0.6})
-
 -- Quickshell
 -- Quickshell: illogical-impulse
 hl.layer_rule({ match = { namespace = "quickshell:.*" }, blur_popups = true})
@@ -157,13 +132,6 @@ hl.layer_rule({ match = { namespace = "quickshell:sidebarRight" }, animation = "
 hl.layer_rule({ match = { namespace = "quickshell:sidebarLeft" }, animation = "slide left"})
 hl.layer_rule({ match = { namespace = "quickshell:verticalBar" }, animation = "slide"})
 hl.layer_rule({ match = { namespace = "quickshell:osk" }, order = -1})
--- Quickshell: waffles
-hl.layer_rule({ match = { namespace = "quickshell:wallpaperSelector" }, animation = "slide top"})
-hl.layer_rule({ match = { namespace = "quickshell:wNotificationCenter" }, no_anim = true})
-hl.layer_rule({ match = { namespace = "quickshell:wOnScreenDisplay" }, no_anim = true})
-hl.layer_rule({ match = { namespace = "quickshell:wStartMenu" }, no_anim = true})
-hl.layer_rule({ match = { namespace = "quickshell:wTaskView" }, ignore_alpha = 0})
-hl.layer_rule({ match = { namespace = "quickshell:wTaskView" }, no_anim = true})
 
 -- Launchers need to be FAST
 hl.layer_rule({ match = { namespace = "gtk4-layer-shell" }, no_anim = true})
