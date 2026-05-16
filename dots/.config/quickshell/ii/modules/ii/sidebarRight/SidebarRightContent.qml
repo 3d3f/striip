@@ -10,7 +10,6 @@ import Quickshell.Bluetooth
 import Quickshell.Hyprland
 
 import qs.modules.ii.sidebarRight.quickToggles
-import qs.modules.ii.sidebarRight.quickToggles.classicStyle
 
 import qs.modules.ii.sidebarRight.bluetoothDevices
 import qs.modules.ii.sidebarRight.nightLight
@@ -84,16 +83,15 @@ Item {
                 sourceComponent: QuickSliders {}
             }
 
-            LoaderedQuickPanelImplementation {
-                styleName: "classic"
-                sourceComponent: ClassicQuickPanel {}
-            }
-
-            LoaderedQuickPanelImplementation {
-                styleName: "android"
-                sourceComponent: AndroidQuickPanel {
-                    editMode: root.editMode
-                }
+            AndroidQuickPanel {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
+                editMode: root.editMode
+                onOpenAudioOutputDialog: root.showAudioOutputDialog = true
+                onOpenAudioInputDialog: root.showAudioInputDialog = true
+                onOpenBluetoothDialog: root.showBluetoothDialog = true
+                onOpenNightLightDialog: root.showNightLightDialog = true
+                onOpenWifiDialog: root.showWifiDialog = true
             }
 
             CenterWidgetGroup {
@@ -180,33 +178,6 @@ Item {
         }
     }
 
-    component LoaderedQuickPanelImplementation: Loader {
-        id: quickPanelImplLoader
-        required property string styleName
-        Layout.alignment: item?.Layout.alignment ?? Qt.AlignHCenter
-        Layout.fillWidth: item?.Layout.fillWidth ?? false
-        visible: active
-        active: Config.options.sidebar.quickToggles.style === styleName
-        Connections {
-            target: quickPanelImplLoader.item
-            function onOpenAudioOutputDialog() {
-                root.showAudioOutputDialog = true;
-            }
-            function onOpenAudioInputDialog() {
-                root.showAudioInputDialog = true;
-            }
-            function onOpenBluetoothDialog() {
-                root.showBluetoothDialog = true;
-            }
-            function onOpenNightLightDialog() {
-                root.showNightLightDialog = true;
-            }
-            function onOpenWifiDialog() {
-                root.showWifiDialog = true;
-            }
-        }
-    }
-
     component SystemButtonRow: Item {
         implicitHeight: Math.max(uptimeContainer.implicitHeight, systemButtonsRow.implicitHeight)
 
@@ -257,7 +228,6 @@ Item {
 
             QuickToggleButton {
                 toggled: root.editMode
-                visible: Config.options.sidebar.quickToggles.style === "android"
                 buttonIcon: "edit"
                 onClicked: root.editMode = !root.editMode
                 StyledToolTip {

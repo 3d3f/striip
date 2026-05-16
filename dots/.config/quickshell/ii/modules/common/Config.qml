@@ -466,7 +466,6 @@ Singleton {
                 }
 
                 property JsonObject quickToggles: JsonObject {
-                    property string style: "android" // Options: classic, android
                     property JsonObject android: JsonObject {
                         property int columns: 5
                         property list<var> toggles: [
