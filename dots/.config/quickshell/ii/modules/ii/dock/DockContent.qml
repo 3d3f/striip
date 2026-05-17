@@ -23,13 +23,10 @@ Item {
     readonly property real dockPadding: 0
     readonly property bool isVertical: dock.isVertical
     readonly property real dotMargin: (Config.options?.dock.height ?? 50) * 0.2
-    readonly property real sepThickness: Math.max(3, Math.round(Appearance.sizes.dockButtonSize * 0.06))
-    readonly property real buttonSlotSize: Appearance.sizes.dockButtonSize + dotMargin * 2
+    readonly property real sepThickness: Math.max(3, Math.round(dock.buttonSize * 0.06))   
+    readonly property real buttonSlotSize: dock.buttonSize + dotMargin * 2
 
-    readonly property real visualWidth: isVertical ? Appearance.sizes.dockButtonSize + dotMargin * 2 : mainLayout.implicitWidth
-    readonly property real visualHeight: isVertical ? mainLayout.implicitHeight : Appearance.sizes.dockButtonSize + dotMargin * 2
-
-    readonly property bool ready: (isVertical ? visualHeight > 0 : visualWidth > 0) && !suppressSizeAnimation
+    readonly property bool ready: (isVertical ? height > 0 : width > 0) && !suppressSizeAnimation
     readonly property bool requestDockShow: previewPopupLoader.item?.visible || anyContextMenuOpen
 
     readonly property real maxWindowPreviewHeight: 200
@@ -453,8 +450,8 @@ Item {
         draggedAppId: root.dragActive ? root.draggedAppId : ""
         willUnpin: root.dragIntent === "unpin" || root.fileDragIntent === "unpin"
         isFile: root.isFileDrag
-        width: Appearance.sizes.dockButtonSize
-        height: Appearance.sizes.dockButtonSize
+        width: dock.buttonSize
+        height: dock.buttonSize
 
         readonly property var draggedFileDelegate: (root.isFileDrag && root.fileDraggedIndex >= 0) ? fileListView.itemAtIndex(root.fileDraggedIndex) : null
         fileIsImage: draggedFileDelegate?.isImage ?? false

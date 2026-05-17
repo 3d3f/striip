@@ -27,6 +27,12 @@ Scope {
 
     readonly property bool isVertical: dockEffectivePosition === "left" || dockEffectivePosition === "right"
 
+    readonly property real dockHeight: Config.options?.dock.height ?? 50
+    readonly property real buttonSize: Math.round(dockHeight * 0.85)
+    readonly property real dotMargin: Math.round(dockHeight * 0.2)
+    readonly property real buttonSlotSize: buttonSize + dotMargin * 2
+    readonly property real dockThickness:  buttonSlotSize + Appearance.sizes.hyprlandGapsOut * 2
+
     Variants {
         model: Quickshell.screens
 
@@ -37,10 +43,7 @@ Scope {
 
             visible: !GlobalStates.screenLocked && !positionChanging
 
-            readonly property bool inVerticalMode: dock.isVertical
-            readonly property real dockThickness: inVerticalMode
-                ? (dockLoader.item?.contentVisualWidth ?? 50) + (dockLoader.item?.dockPadding ?? 0) * 2 + Appearance.sizes.hyprlandGapsOut * 2
-                : (dockLoader.item?.contentVisualHeight ?? 50) + (dockLoader.item?.dockPadding ?? 0) * 2 + Appearance.sizes.hyprlandGapsOut * 2
+            readonly property real dockThickness: dock.dockThickness
 
             property bool reveal: false
             property bool positionChanging: false
@@ -49,7 +52,6 @@ Scope {
             // Drag and hover logic
             property bool stripDragActive: false
             property bool bodyDragActive: false
-            readonly property bool contentDragActive: dockLoader.item?.externalDragOver ?? false
 
             readonly property bool isMouseOver: triggerStrip.containsMouse
                 || dockMouseArea.containsMouse
@@ -211,9 +213,6 @@ Scope {
                             parent: dockContentHost
                             anchors.fill: parent
 
-                            readonly property real contentVisualWidth: content.visualWidth
-                            readonly property real contentVisualHeight: content.visualHeight
-                            readonly property real dockPadding: content.dockPadding
                             readonly property string dragState: content.dragState
                             readonly property bool requestDockShow: content.requestDockShow
                             readonly property bool ready: content.ready
@@ -233,11 +232,11 @@ Scope {
                                 id: visualBackground
                                 anchors.centerIn: parent
                                 width: dock.isVertical
-                                    ? (dockLoader.item?.contentVisualWidth ?? 1)
-                                    : Math.min(dockLoader.item?.contentVisualWidth ?? 1, parent.width - Appearance.sizes.hyprlandGapsOut * 2)
+                                    ? dock.buttonSlotSize
+                                    : parent.width - Appearance.sizes.hyprlandGapsOut * 2
                                 height: dock.isVertical
-                                    ? Math.min(dockLoader.item?.contentVisualHeight ?? 1, parent.height - Appearance.sizes.hyprlandGapsOut * 2)
-                                    : (dockLoader.item?.contentVisualHeight ?? 1)
+                                    ? parent.height - Appearance.sizes.hyprlandGapsOut * 2
+                                    : dock.buttonSlotSize
                                 color: Appearance.colors.colLayer0
                                 border.width: 1
                                 border.color: Appearance.colors.colLayer0Border

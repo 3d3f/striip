@@ -9,8 +9,8 @@ import qs.modules.common.functions
 
 Item {
     id: root
-    width: Appearance.sizes.dockButtonSize
-    height: Appearance.sizes.dockButtonSize
+    width: dock.buttonSize
+    height: dock.buttonSize
 
     property string draggedAppId: ""
     property bool willUnpin: false
@@ -40,8 +40,8 @@ Item {
 
             DockIcon {
                 anchors.centerIn: parent
-                implicitWidth: Appearance.sizes.dockButtonSize
-                implicitHeight: Appearance.sizes.dockButtonSize
+                implicitWidth: root.width
+                implicitHeight: root.height
                 appId: root.draggedAppId
                 isRunning: true
             }
@@ -71,7 +71,7 @@ Item {
                 anchors.centerIn: parent
                 visible: ghostThumbnail.status !== Image.Ready
                 text: "image"
-                iconSize: Appearance.sizes.dockButtonSize / 2
+                iconSize: root.width / 2
                 color: Appearance.colors.colOnLayer0
             } 
         }

@@ -18,9 +18,9 @@ DockButton {
     property var dockContent: null
     property int delegateIndex: -1
     property string filePath: ""
-
-    property int buttonSize: Appearance.sizes.dockButtonSize
-    property int dotMargin: Math.round((Config.options?.dock.height ?? 50) * 0.2)
+    
+    readonly property real buttonSize: dock.buttonSize
+    readonly property real dotMargin: dock.dotMargin
 
     readonly property bool isVertical: dockContent?.isVertical ?? false
 

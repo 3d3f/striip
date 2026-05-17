@@ -15,8 +15,8 @@ DockButton {
     property int delegateIndex: -1
     property int lastFocused: -1
 
-    readonly property real dockHeight: Config.options?.dock.height ?? 60
-    property int dotMargin: Math.round(dockHeight * 0.2)
+    readonly property real dockHeight: dock.dockHeight
+    readonly property real dotMargin: dock.dotMargin
 
     readonly property var desktopEntry: appToplevel ? TaskbarApps.getCachedDesktopEntry(appToplevel.appId) : null
     property bool isVertical: dockContent?.isVertical ?? false

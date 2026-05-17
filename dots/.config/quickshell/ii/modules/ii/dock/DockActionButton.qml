@@ -64,7 +64,7 @@ DockButton {
                 : root.symbolName
 
             iconSize: root.isDragging
-                ? Math.round(root.buttonSize * 0.4)
+                ? Math.round(root.buttonSize * 0.5)
                 : root.symbolSize
             Behavior on iconSize {
                 animation: Appearance.animation.elementResize.numberAnimation.createObject(this)
