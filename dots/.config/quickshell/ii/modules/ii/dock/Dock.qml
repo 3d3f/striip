@@ -27,30 +27,6 @@ Scope {
 
     readonly property bool isVertical: dockEffectivePosition === "left" || dockEffectivePosition === "right"
 
-    function computeSizes(opts) {
-        const gapsOut = opts.gapsOut
-        const barConflicts = opts.barActive && (opts.isVertical !== opts.barIsVertical)
-        const barOffset = barConflicts ? (opts.isVertical ? opts.barThickness : 0) : 0
-        const barOffsetH = barConflicts ? (!opts.isVertical ? opts.barThickness : 0) : 0
-
-        const maxW = Math.max(1, opts.availableW - gapsOut * 2 - barOffsetH)
-        const maxH = Math.max(1, opts.availableH - gapsOut * 2 - barOffset)
-
-        const contentW = opts.isLoaded ? opts.contentVisualWidth : (opts.isVertical ? 60 : maxW)
-        const contentH = opts.isLoaded ? opts.contentVisualHeight : (opts.isVertical ? maxH : 60)
-        const dockPadding = opts.isLoaded ? opts.dockPadding : 0
-
-        return {
-            maxWidth: maxW,
-            maxHeight: maxH,
-            dockWidth: opts.isVertical ? contentW + dockPadding * 2 + gapsOut * 2 : Math.min(contentW + dockPadding * 2 + gapsOut * 2, maxW),
-            dockHeight: opts.isVertical ? Math.min(contentH + dockPadding * 2 + gapsOut * 2, maxH) : contentH + dockPadding * 2 + gapsOut * 2,
-            dockThickness: opts.isVertical ? contentW + dockPadding * 2 + gapsOut * 2 : contentH + dockPadding * 2 + gapsOut * 2,
-            backgroundWidth:  Math.max(1, opts.isVertical ? contentW : Math.min(contentW, maxW - gapsOut * 2)),
-            backgroundHeight: Math.max(1, opts.isVertical ? Math.min(contentH, maxH - gapsOut * 2) : contentH)
-        }
-    }
-
     Variants {
         model: Quickshell.screens
 
@@ -60,16 +36,12 @@ Scope {
             screen: modelData
 
             visible: !GlobalStates.screenLocked && !positionChanging
-            // using a flag for positionChanging is not really necessary, but it prevents some graphical issues caused by qml when the dock is moving
-
-            readonly property real availableW: screen?.width ?? 1920
-            readonly property real availableH: screen?.height ?? 1080
-            readonly property bool barActive: GlobalStates.barOpen
-            readonly property bool barIsVertical: Config.options?.bar?.vertical ?? false
-            readonly property real barThickness: barActive ? (barIsVertical ? (Config.options?.bar?.sizes?.width ?? Appearance.sizes.verticalBarWidth) : (Config.options?.bar?.sizes?.height ?? Appearance.sizes.barHeight)) : 0
 
             readonly property bool inVerticalMode: dock.isVertical
-            readonly property real dockThickness: inVerticalMode ? dockRoot.sizing.dockWidth : dockRoot.sizing.dockHeight
+            readonly property real dockThickness: inVerticalMode
+                ? (dockLoader.item?.contentVisualWidth ?? 50) + (dockLoader.item?.dockPadding ?? 0) * 2 + Appearance.sizes.hyprlandGapsOut * 2
+                : (dockLoader.item?.contentVisualHeight ?? 50) + (dockLoader.item?.dockPadding ?? 0) * 2 + Appearance.sizes.hyprlandGapsOut * 2
+
             property bool reveal: false
             property bool positionChanging: false
             readonly property bool readyToReveal: reveal && (dockLoader.item?.ready ?? false)
@@ -78,12 +50,12 @@ Scope {
             property bool stripDragActive: false
             property bool bodyDragActive: false
             readonly property bool contentDragActive: dockLoader.item?.externalDragOver ?? false
-            
-            readonly property bool isMouseOver: triggerStrip.containsMouse 
-                                            || dockMouseArea.containsMouse 
-                                            || triggerStripDrop.containsDrag // Sensore Strip
-                                            || bodyDropArea.containsDrag    // Sensore Corpo
-                                            || (dockLoader.item?.externalDragOver ?? false) 
+
+            readonly property bool isMouseOver: triggerStrip.containsMouse
+                || dockMouseArea.containsMouse
+                || triggerStripDrop.containsDrag
+                || bodyDropArea.containsDrag
+                || (dockLoader.item?.externalDragOver ?? false)
 
             readonly property bool shouldBeOpen: dock.pinned
                 || isMouseOver
@@ -104,22 +76,8 @@ Scope {
                 return wsId === -1 || HyprlandData.hyprlandClientsForWorkspace(wsId).length === 0
             }
 
-            readonly property var sizing: dock.computeSizes({
-                gapsOut: Appearance.sizes.hyprlandGapsOut,
-                isVertical: dock.isVertical,
-                barActive: dockRoot.barActive,
-                barIsVertical: dockRoot.barIsVertical,
-                barThickness: dockRoot.barThickness,
-                availableW: dockRoot.availableW,
-                availableH: dockRoot.availableH,
-                isLoaded: dockLoader.activeAsync,
-                contentVisualWidth: dockLoader.item?.contentVisualWidth ?? 0,
-                contentVisualHeight: dockLoader.item?.contentVisualHeight ?? 0,
-                dockPadding: dockLoader.item?.dockPadding ?? 0
-            })
-
-            implicitWidth: Math.max(1, dockRoot.sizing.dockWidth)
-            implicitHeight: Math.max(1, dockRoot.sizing.dockHeight)
+            implicitWidth: dock.isVertical ? dockThickness : 1
+            implicitHeight: dock.isVertical ? 1 : dockThickness
 
             anchors {
                 top: dock.dockEffectivePosition !== "bottom"
@@ -138,9 +96,9 @@ Scope {
                 Region { item: dockMouseArea }
             }
 
-            Timer { 
-                id: unloadTimer 
-                interval: Appearance.animation.elementMoveFast.duration + 100 
+            Timer {
+                id: unloadTimer
+                interval: Appearance.animation.elementMoveFast.duration + 100
             }
 
             Timer {
@@ -186,13 +144,14 @@ Scope {
                 hoverEnabled: true
                 z: 1
                 readonly property real stripThickness: Appearance.sizes.hyprlandGapsOut ?? 5
-                width: dock.isVertical ? stripThickness : dockRoot.sizing.maxWidth
-                height: dock.isVertical ? dockRoot.sizing.maxHeight : stripThickness
 
-                anchors.top: (dock.dockEffectivePosition !== "bottom") ? parent.top : undefined
-                anchors.bottom: (dock.dockEffectivePosition === "bottom") ? parent.bottom : undefined
-                anchors.left: (dock.dockEffectivePosition !== "right") ? parent.left : undefined
-                anchors.right: (dock.dockEffectivePosition === "right") ? parent.right : undefined
+                width: dock.isVertical ? stripThickness : parent.width
+                height: dock.isVertical ? parent.height : stripThickness
+
+                anchors.top: dock.dockEffectivePosition !== "bottom" ? parent.top : undefined
+                anchors.bottom: dock.dockEffectivePosition === "bottom" ? parent.bottom : undefined
+                anchors.left: dock.dockEffectivePosition !== "right" ? parent.left : undefined
+                anchors.right: dock.dockEffectivePosition === "right" ? parent.right : undefined
                 anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
                 anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
 
@@ -210,13 +169,13 @@ Scope {
                 readonly property real hiddenOffset: dockRoot.dockThickness - (Appearance.sizes.hyprlandGapsOut ?? 2)
                 readonly property real currentOffset: dockRoot.readyToReveal ? 0 : hiddenOffset
 
-                width: dock.isVertical ? dockRoot.dockThickness : dockRoot.sizing.dockWidth
-                height: dock.isVertical ? dockRoot.sizing.dockHeight : dockRoot.dockThickness
+                width: dock.isVertical ? dockRoot.dockThickness : parent.width
+                height: dock.isVertical ? parent.height : dockRoot.dockThickness
 
-                anchors.top: (dock.dockEffectivePosition === "top") ? parent.top : undefined
-                anchors.bottom: (dock.dockEffectivePosition === "bottom") ? parent.bottom : undefined
-                anchors.left: (dock.dockEffectivePosition === "left") ? parent.left : undefined
-                anchors.right: (dock.dockEffectivePosition === "right") ? parent.right : undefined
+                anchors.top: dock.dockEffectivePosition === "top" ? parent.top : undefined
+                anchors.bottom: dock.dockEffectivePosition === "bottom" ? parent.bottom : undefined
+                anchors.left: dock.dockEffectivePosition === "left" ? parent.left : undefined
+                anchors.right: dock.dockEffectivePosition === "right" ? parent.right : undefined
                 anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
                 anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
 
@@ -273,8 +232,12 @@ Scope {
                             Rectangle {
                                 id: visualBackground
                                 anchors.centerIn: parent
-                                width: dockRoot.sizing.backgroundWidth
-                                height: dockRoot.sizing.backgroundHeight
+                                width: dock.isVertical
+                                    ? (dockLoader.item?.contentVisualWidth ?? 1)
+                                    : Math.min(dockLoader.item?.contentVisualWidth ?? 1, parent.width - Appearance.sizes.hyprlandGapsOut * 2)
+                                height: dock.isVertical
+                                    ? Math.min(dockLoader.item?.contentVisualHeight ?? 1, parent.height - Appearance.sizes.hyprlandGapsOut * 2)
+                                    : (dockLoader.item?.contentVisualHeight ?? 1)
                                 color: Appearance.colors.colLayer0
                                 border.width: 1
                                 border.color: Appearance.colors.colLayer0Border
