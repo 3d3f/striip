@@ -296,7 +296,6 @@ Singleton {
                 property bool monochromeIcons: true
                 property bool dimInactiveIcons: false
                 property real height: 50
-                property real hoverRegionHeight: 2
                 property bool pinnedOnStartup: false
                 property bool enablePreview: true
                 property bool revealOnEmptyWorkspace: true

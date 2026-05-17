@@ -30,18 +30,14 @@ Scope {
     function computeSizes(opts) {
         const gapsOut = opts.gapsOut
         const barConflicts = opts.barActive && (opts.isVertical !== opts.barIsVertical)
-        
         const barOffset = barConflicts ? (opts.isVertical ? opts.barThickness : 0) : 0
         const barOffsetH = barConflicts ? (!opts.isVertical ? opts.barThickness : 0) : 0
 
         const maxW = Math.max(1, opts.availableW - gapsOut * 2 - barOffsetH)
         const maxH = Math.max(1, opts.availableH - gapsOut * 2 - barOffset)
 
-        const unloadedW = maxW
-        const unloadedH = maxH
-
-        const contentW = opts.isLoaded ? opts.contentVisualWidth : (opts.isVertical ? 60 : unloadedW)
-        const contentH = opts.isLoaded ? opts.contentVisualHeight : (opts.isVertical ? unloadedH : 60)
+        const contentW = opts.isLoaded ? opts.contentVisualWidth : (opts.isVertical ? 60 : maxW)
+        const contentH = opts.isLoaded ? opts.contentVisualHeight : (opts.isVertical ? maxH : 60)
         const dockPadding = opts.isLoaded ? opts.dockPadding : 0
 
         return {
@@ -62,8 +58,8 @@ Scope {
             id: dockRoot
             required property var modelData
             screen: modelData
-            
-            visible: !GlobalStates.screenLocked && !positionChanging 
+
+            visible: !GlobalStates.screenLocked && !positionChanging
             // using a flag for positionChanging is not really necessary, but it prevents some graphical issues caused by qml when the dock is moving
 
             readonly property real availableW: screen?.width ?? 1920
@@ -72,31 +68,41 @@ Scope {
             readonly property bool barIsVertical: Config.options?.bar?.vertical ?? false
             readonly property real barThickness: barActive ? (barIsVertical ? (Config.options?.bar?.sizes?.width ?? Appearance.sizes.verticalBarWidth) : (Config.options?.bar?.sizes?.height ?? Appearance.sizes.barHeight)) : 0
 
-            readonly property bool isVertical: dock.isVertical
-            readonly property real dockThickness: isVertical ? dockRoot.sizing.dockWidth : dockRoot.sizing.dockHeight
-
-            // reveal is set imperatively (not as a binding) to avoid a binding loop:
+            readonly property bool inVerticalMode: dock.isVertical
+            readonly property real dockThickness: inVerticalMode ? dockRoot.sizing.dockWidth : dockRoot.sizing.dockHeight
             property bool reveal: false
             property bool positionChanging: false
             readonly property bool readyToReveal: reveal && (dockLoader.item?.ready ?? false)
 
-            function updateReveal() {
-                var shouldReveal = dock.pinned
-                    || (dockMouseArea.containsMouse || graceTimer.running)
-                    || (dockLoader.item?.requestDockShow ?? false)
-                    || (Config.options?.dock?.revealOnEmptyWorkspace && workspaceEmpty)
-                if (reveal !== shouldReveal)
-                    reveal = shouldReveal
+            // Drag and hover logic
+            property bool stripDragActive: false
+            property bool bodyDragActive: false
+            readonly property bool contentDragActive: dockLoader.item?.externalDragOver ?? false
+            
+            readonly property bool isMouseOver: triggerStrip.containsMouse 
+                                            || dockMouseArea.containsMouse 
+                                            || triggerStripDrop.containsDrag // Sensore Strip
+                                            || bodyDropArea.containsDrag    // Sensore Corpo
+                                            || (dockLoader.item?.externalDragOver ?? false) 
+
+            readonly property bool shouldBeOpen: dock.pinned
+                || isMouseOver
+                || (dockLoader.item?.requestDockShow ?? false)
+                || (Config.options?.dock?.revealOnEmptyWorkspace && workspaceEmpty)
+
+            onShouldBeOpenChanged: {
+                if (shouldBeOpen) {
+                    reveal = true
+                    graceTimer.stop()
+                } else {
+                    graceTimer.restart()
+                }
             }
 
-            // TODO: check for multi-monitor situations
             readonly property bool workspaceEmpty: {
                 const wsId = HyprlandData.activeWorkspace?.id ?? -1
-                if (wsId === -1) return true
-                return HyprlandData.hyprlandClientsForWorkspace(wsId).length === 0
+                return wsId === -1 || HyprlandData.hyprlandClientsForWorkspace(wsId).length === 0
             }
-
-            onWorkspaceEmptyChanged: updateReveal()
 
             readonly property var sizing: dock.computeSizes({
                 gapsOut: Appearance.sizes.hyprlandGapsOut,
@@ -127,21 +133,20 @@ Scope {
             WlrLayershell.layer: WlrLayer.Overlay
             color: "transparent"
 
-            mask: Region { 
-                item: dockMouseArea 
+            mask: Region {
+                item: triggerStrip
+                Region { item: dockMouseArea }
             }
 
             Timer { 
-                id: unloadTimer
+                id: unloadTimer 
                 interval: Appearance.animation.elementMoveFast.duration + 100 
             }
 
-            // Grace timer: keeps the dock revealed for 1 second after the initial
-            // hover trigger, giving the user time to reach the dock as it expands.
             Timer {
                 id: graceTimer
-                interval: Appearance.animation.elementMoveFast.duration + 800 
-                onRunningChanged: dockRoot.updateReveal()
+                interval: 800
+                onTriggered: if (!dockRoot.isMouseOver) dockRoot.reveal = false
             }
 
             onRevealChanged: {
@@ -149,10 +154,8 @@ Scope {
                 else unloadTimer.stop()
             }
 
-            // Watch dock.pinned changes to update reveal
             Connections {
                 target: dock
-                function onPinnedChanged() { dockRoot.updateReveal() }
                 function onDockEffectivePositionChanged() {
                     dockRoot.positionChanging = true
                     positionChangeTimer.restart()
@@ -177,56 +180,63 @@ Scope {
                 }
             }
 
+            // Trigger strip
+            MouseArea {
+                id: triggerStrip
+                hoverEnabled: true
+                z: 1
+                readonly property real stripThickness: Appearance.sizes.hyprlandGapsOut ?? 5
+                width: dock.isVertical ? stripThickness : dockRoot.sizing.maxWidth
+                height: dock.isVertical ? dockRoot.sizing.maxHeight : stripThickness
+
+                anchors.top: (dock.dockEffectivePosition !== "bottom") ? parent.top : undefined
+                anchors.bottom: (dock.dockEffectivePosition === "bottom") ? parent.bottom : undefined
+                anchors.left: (dock.dockEffectivePosition !== "right") ? parent.left : undefined
+                anchors.right: (dock.dockEffectivePosition === "right") ? parent.right : undefined
+                anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
+                anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
+
+                DropArea {
+                    id: triggerStripDrop
+                    anchors.fill: parent
+                }
+            }
+
+            // Dock body
             MouseArea {
                 id: dockMouseArea
                 hoverEnabled: true
 
-                // When the mouse enters the hover strip and the dock is hidden,
-                // start the grace timer so the dock stays open for 1 second while
-                // it animates and the user moves the cursor onto it.
-                onContainsMouseChanged: {
-                    if (containsMouse && !dockRoot.reveal && !dock.pinned) {
-                        graceTimer.restart()
-                    }
-                    // Update reveal imperatively to avoid binding loop
-                    dockRoot.updateReveal()
-                }
-
-                property real hiddenOffset: dockRoot.dockThickness - (Config.options?.dock.hoverRegionHeight ?? 2)
-                property real currentOffset: dockRoot.readyToReveal ? 0 : hiddenOffset
+                readonly property real hiddenOffset: dockRoot.dockThickness - (Appearance.sizes.hyprlandGapsOut ?? 2)
+                readonly property real currentOffset: dockRoot.readyToReveal ? 0 : hiddenOffset
 
                 width: dock.isVertical ? dockRoot.dockThickness : dockRoot.sizing.dockWidth
                 height: dock.isVertical ? dockRoot.sizing.dockHeight : dockRoot.dockThickness
 
-                state: dock.dockEffectivePosition
+                anchors.top: (dock.dockEffectivePosition === "top") ? parent.top : undefined
+                anchors.bottom: (dock.dockEffectivePosition === "bottom") ? parent.bottom : undefined
+                anchors.left: (dock.dockEffectivePosition === "left") ? parent.left : undefined
+                anchors.right: (dock.dockEffectivePosition === "right") ? parent.right : undefined
+                anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
+                anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
 
-                states: [
-                    State {
-                        name: "top"
-                        AnchorChanges { target: dockMouseArea; anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.topMargin: -currentOffset }
-                    },
-                    State {
-                        name: "bottom"
-                        AnchorChanges { target: dockMouseArea; anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.bottomMargin: -currentOffset }
-                    },
-                    State {
-                        name: "left"
-                        AnchorChanges { target: dockMouseArea; anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.leftMargin: -currentOffset }
-                    },
-                    State {
-                        name: "right"
-                        AnchorChanges { target: dockMouseArea; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.rightMargin: -currentOffset }
-                    }
-                ]
+                anchors.topMargin: dock.dockEffectivePosition === "top" ? -currentOffset : 0
+                anchors.bottomMargin: dock.dockEffectivePosition === "bottom" ? -currentOffset : 0
+                anchors.leftMargin: dock.dockEffectivePosition === "left" ? -currentOffset : 0
+                anchors.rightMargin: dock.dockEffectivePosition === "right" ? -currentOffset : 0
 
                 Behavior on anchors.topMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
                 Behavior on anchors.bottomMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
                 Behavior on anchors.leftMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
                 Behavior on anchors.rightMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
+
+                DropArea {
+                    id: bodyDropArea
+                    anchors.fill: parent
+                    keys: ["text/uri-list"]
+                    onEntered: dockRoot.bodyDragActive = true
+                    onExited: dockRoot.bodyDragActive = false
+                }
 
                 Item {
                     id: dockContentHost
@@ -248,21 +258,17 @@ Scope {
                             readonly property string dragState: content.dragState
                             readonly property bool requestDockShow: content.requestDockShow
                             readonly property bool ready: content.ready
+                            // Exposed property from DockContent.qml
+                            readonly property bool externalDragOver: content.externalDragOver
 
                             function endDrag() { content.endDrag() }
                             function endFileDrag() { content.endFileDrag() }
                             function mimeIconFromPath(p) { return content.mimeIconFromPath(p) }
 
-                            // When requestDockShow changes inside the loaded content, update reveal
-                            onRequestDockShowChanged: dockRoot.updateReveal()
-
-                            // Only show once DockContent itself is ready 
                             readonly property bool contentReady: content.ready && !dockRoot.positionChanging
                             opacity: contentReady ? 1.0 : 0.0
 
-                            StyledRectangularShadow { 
-                                target: visualBackground
-                            }
+                            StyledRectangularShadow { target: visualBackground }
 
                             Rectangle {
                                 id: visualBackground
@@ -279,7 +285,6 @@ Scope {
                                     anchors.fill: parent
                                     keys: ["text/uri-list"]
                                     enabled: content.dragActive === false
-
                                     onEntered: (drag) => {
                                         if (!drag.hasUrls) return
                                         const url = drag.urls[0]?.toString() ?? ""
