@@ -22,7 +22,7 @@ Item {
 
     readonly property real dockPadding: 0
     readonly property bool isVertical: dock.isVertical
-    readonly property real dotMargin: (Config.options?.dock.height ?? 60) * 0.2
+    readonly property real dotMargin: (Config.options?.dock.height ?? 50) * 0.2
     readonly property real sepThickness: Math.max(3, Math.round(Appearance.sizes.dockButtonSize * 0.06))
     readonly property real buttonSlotSize: Appearance.sizes.dockButtonSize + dotMargin * 2
 
@@ -287,7 +287,7 @@ Item {
             Layout.alignment: Qt.AlignCenter
             DockActionButton {
                 id: pinButton
-                anchors.centerIn: parent
+                anchors.fill: parent
                 symbolName: "keep"
                 toggled: root.isPinned
                 onClicked: root.togglePinRequested()
@@ -297,10 +297,6 @@ Item {
                 fileDropIcon: root.externalDragIcon
                 fileDropActive: root.externalDragOver
             }
-        }
-
-        SectionSeparator {
-            show: root.processedPinnedApps.length > 0 || root.processedRunningApps.length > 0 || root.processedFiles.length > 0
         }
 
         Flickable {
@@ -433,10 +429,6 @@ Item {
             }
         }
 
-        SectionSeparator {
-            show: root.processedPinnedApps.length > 0 || root.processedRunningApps.length > 0 || root.processedFiles.length > 0
-        }
-
         Item {
             id: unpinButtonWrapper
             Layout.preferredWidth: root.buttonSlotSize
@@ -444,7 +436,7 @@ Item {
             Layout.alignment: Qt.AlignCenter
             DockActionButton {
                 id: unpinButton
-                anchors.centerIn: parent
+                anchors.fill: parent
                 symbolName: "apps"
                 activeShape: MaterialShape.Shape.SoftBurst
                 onClicked: GlobalStates.overviewOpen = !GlobalStates.overviewOpen

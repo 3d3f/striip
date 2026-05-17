@@ -21,9 +21,6 @@ DockButton {
     property bool fileDropActive: false
     readonly property bool isDragging: dragActive || fileDropActive
 
-    background.implicitWidth: 0
-    background.implicitHeight: 0
-
     contentItem: Item {
         MaterialShapeWrappedMaterialSymbol {
             id: shapeSymbol
@@ -31,7 +28,7 @@ DockButton {
 
             shape: root.isDragging ? root.activeShape : root.normalShape
 
-            implicitSize: root.dragOver ? root.buttonSize * 1.1 : root.buttonSize * 0.9
+            implicitSize: root.dragOver ? root.buttonSize * 1.1 : root.buttonSize
             Behavior on implicitSize {
                 animation: Appearance.animation.elementResize.numberAnimation.createObject(this)
             }
@@ -53,9 +50,9 @@ DockButton {
                            root.hovered ? Appearance.colors.colPrimaryHover :
                            Appearance.colors.colPrimary
                 }
-                return root.down ? Appearance.colors.colLayer1Active :
-                       root.hovered ? Appearance.colors.colLayer1Hover :
-                       "transparent"
+                return root.down ? Appearance.colors.colSecondaryContainerHover :
+                       root.hovered ? Appearance.colors.colSecondaryContainerHover :
+                       Appearance.colors.colSecondaryContainer
             }
 
             Behavior on color {

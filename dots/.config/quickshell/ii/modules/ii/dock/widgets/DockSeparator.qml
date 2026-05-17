@@ -21,8 +21,8 @@ Item {
             ? root.width : root.height) * root.marginScale)
 
         anchors.centerIn: parent
-        width: root.isVertical ? root.width - currentMargin * 2 : root.width
-        height: root.isVertical ? root.height : root.height - currentMargin * 2
+        width: root.isVertical ? root.width - currentMargin * 3 : root.width 
+        height: root.isVertical ? root.height : root.height - currentMargin * 3
         radius: Appearance.rounding.full
         color: root.color
     }

@@ -8,7 +8,7 @@ import Quickshell.Wayland
 Singleton {
     id: root
 
-    // Desktop entry cache─
+    // Desktop entry cache
     property var _desktopEntryCache: ({})
 
     function getCachedDesktopEntry(appId) {
@@ -72,7 +72,7 @@ Singleton {
         Config.options.dock.pinnedApps = pinned
     }
 
-    // Pinned file helpers─
+    // Pinned file helpers
     function addPinnedFile(path) {
         const cleanPath = path.toString().replace(/^file:\/\//, "")
         const current = Config.options?.dock?.pinnedFiles ?? []

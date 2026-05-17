@@ -295,7 +295,7 @@ Singleton {
                 property bool isolateMonitors: false
                 property bool monochromeIcons: true
                 property bool dimInactiveIcons: false
-                property real height: 47
+                property real height: 50
                 property real hoverRegionHeight: 2
                 property bool pinnedOnStartup: false
                 property bool enablePreview: true
