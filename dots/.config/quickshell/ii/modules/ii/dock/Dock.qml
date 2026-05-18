@@ -74,6 +74,11 @@ Scope {
                 return wsId === -1 || HyprlandData.hyprlandClientsForWorkspace(wsId).length === 0
             }
 
+            onWorkspaceEmptyChanged: {
+                if (!workspaceEmpty && !dockRoot.isMouseOver)
+                    dockRoot.reveal = false
+            }
+
             implicitWidth: dock.isVertical ? dockThickness : 1
             implicitHeight: dock.isVertical ? 1 : dockThickness
 
