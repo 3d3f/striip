@@ -150,10 +150,27 @@ Scope {
                 width: dock.isVertical ? stripThickness : parent.width
                 height: dock.isVertical ? parent.height : stripThickness
 
-                anchors.top: dock.dockEffectivePosition !== "bottom" ? parent.top : undefined
-                anchors.bottom: dock.dockEffectivePosition === "bottom" ? parent.bottom : undefined
-                anchors.left: dock.dockEffectivePosition !== "right" ? parent.left : undefined
-                anchors.right: dock.dockEffectivePosition === "right" ? parent.right : undefined
+                state: dock.dockEffectivePosition
+
+                states: [
+                    State {
+                        name: "top"
+                        AnchorChanges { target: triggerStrip; anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter }
+                    },
+                    State {
+                        name: "bottom"
+                        AnchorChanges { target: triggerStrip; anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter }
+                    },
+                    State {
+                        name: "left"
+                        AnchorChanges { target: triggerStrip; anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter }
+                    },
+                    State {
+                        name: "right"
+                        AnchorChanges { target: triggerStrip; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
+                    }
+                ]
+
                 anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
                 anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
 
@@ -174,17 +191,30 @@ Scope {
                 width: dock.isVertical ? dockRoot.dockThickness : parent.width
                 height: dock.isVertical ? parent.height : dockRoot.dockThickness
 
-                anchors.top: dock.dockEffectivePosition === "top" ? parent.top : undefined
-                anchors.bottom: dock.dockEffectivePosition === "bottom" ? parent.bottom : undefined
-                anchors.left: dock.dockEffectivePosition === "left" ? parent.left : undefined
-                anchors.right: dock.dockEffectivePosition === "right" ? parent.right : undefined
-                anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
-                anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
+                state: dock.dockEffectivePosition
 
-                anchors.topMargin: dock.dockEffectivePosition === "top" ? -currentOffset : 0
-                anchors.bottomMargin: dock.dockEffectivePosition === "bottom" ? -currentOffset : 0
-                anchors.leftMargin: dock.dockEffectivePosition === "left" ? -currentOffset : 0
-                anchors.rightMargin: dock.dockEffectivePosition === "right" ? -currentOffset : 0
+                states: [
+                    State {
+                        name: "top"
+                        AnchorChanges { target: dockMouseArea; anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter }
+                        PropertyChanges { target: dockMouseArea; anchors.topMargin: -currentOffset }
+                    },
+                    State {
+                        name: "bottom"
+                        AnchorChanges { target: dockMouseArea; anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter }
+                        PropertyChanges { target: dockMouseArea; anchors.bottomMargin: -currentOffset }
+                    },
+                    State {
+                        name: "left"
+                        AnchorChanges { target: dockMouseArea; anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter }
+                        PropertyChanges { target: dockMouseArea; anchors.leftMargin: -currentOffset }
+                    },
+                    State {
+                        name: "right"
+                        AnchorChanges { target: dockMouseArea; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
+                        PropertyChanges { target: dockMouseArea; anchors.rightMargin: -currentOffset }
+                    }
+                ]
 
                 Behavior on anchors.topMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
                 Behavior on anchors.bottomMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
@@ -227,20 +257,20 @@ Scope {
                             opacity: contentReady ? 1.0 : 0.0
 
                             StyledRectangularShadow { target: visualBackground }
-
                             Rectangle {
                                 id: visualBackground
                                 anchors.centerIn: parent
                                 width: dock.isVertical
                                     ? dock.buttonSlotSize
-                                    : parent.width - Appearance.sizes.hyprlandGapsOut * 2
+                                    : Math.min(content.implicitWidth, parent.width - Appearance.sizes.hyprlandGapsOut * 2)
                                 height: dock.isVertical
-                                    ? parent.height - Appearance.sizes.hyprlandGapsOut * 2
+                                    ? Math.min(content.implicitHeight, parent.height - Appearance.sizes.hyprlandGapsOut * 2)
                                     : dock.buttonSlotSize
                                 color: Appearance.colors.colLayer0
                                 border.width: 1
                                 border.color: Appearance.colors.colLayer0Border
                                 radius: Appearance.rounding.large
+
 
                                 DropArea {
                                     id: fileDropArea

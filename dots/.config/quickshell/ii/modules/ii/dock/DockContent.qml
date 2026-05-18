@@ -15,6 +15,9 @@ import "./widgets"
 Item {
     id: root
 
+    implicitHeight: mainLayout.implicitHeight
+    implicitWidth: mainLayout.implicitWidth
+
     signal togglePinRequested
 
     property var currentScreen: null
