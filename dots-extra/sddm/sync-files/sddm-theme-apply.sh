@@ -112,7 +112,6 @@ if [ "$IS_IMAGE" = true ]; then
 else
     PLACEHOLDER_FILENAME="placeholder.png"
     PLACEHOLDER_TEMP="/tmp/sddm_placeholder_$$.png"
-    echo "Generating thumbnail for video wallpaper..."
     ffmpeg -y -i "$WALLPAPER_PATH" -ss 00:00:01.000 -vframes 1 "$PLACEHOLDER_TEMP" >/dev/null 2>&1 || {
         echo "Error: failed to generate thumbnail with ffmpeg" >&2
         exit 10
@@ -142,7 +141,6 @@ for file in "${REQUIRED_FILES[@]}"; do
 done
 
 # Copy to destination
-echo "Copying necessary files to SDDM..."
 
 sudo mkdir -p -m 755 "$DEST/Components"
 sudo mkdir -p -m 755 "$DEST/Backgrounds"
@@ -157,7 +155,6 @@ if [ "$IS_VIDEO" = true ]; then
     sudo cp --no-dereference --preserve=mode,timestamps "$PLACEHOLDER_TEMP" "$DEST/Backgrounds/$PLACEHOLDER_FILENAME"
     rm -f "$PLACEHOLDER_TEMP"
     sudo chmod 644 "$DEST/Backgrounds/$PLACEHOLDER_FILENAME"
-    echo "Thumbnail generated: $PLACEHOLDER_FILENAME"
 fi
 
 sudo chmod 644 \
@@ -165,5 +162,3 @@ sudo chmod 644 \
     "$DEST/Components/Settings.qml" \
     "$DEST/Backgrounds/$BACKGROUND_FILENAME" \
     "$DEST/Themes/striip-sddm.conf"
-
-echo "striip-sddm applied successfully (background: $BACKGROUND_FILENAME)"

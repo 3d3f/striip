@@ -130,7 +130,6 @@ def main() -> None:
     
     try:
         OUTPUT_QML.write_text(qml_content, encoding="utf-8")
-        print(f"SUCCESS: Generated {OUTPUT_QML} with {property_count} properties.")
     except OSError as e:
         print(f"ERROR: Failed to write output: {e}", file=sys.stderr)
         sys.exit(1)

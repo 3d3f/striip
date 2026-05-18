@@ -251,19 +251,79 @@ switch() {
         [[ "$term_fg_boost" != "null" && -n "$term_fg_boost" ]] && generate_colors_material_args+=(--term_fg_boost "$term_fg_boost")
     fi
 
+    # Strip ANSI escape codes from a string (for clean notification bodies)
+    strip_ansi() { sed 's/\x1B\[[0-9;]*[mKGHFJA]//g'; }
+
     # Merge matugen configuration files
-    python3 "$SCRIPT_DIR/merge-matugen-config.py" \
+    # stdout carries machine-readable SKIPPED: lines; real warnings go to stderr
+    merge_output=$(python3 "$SCRIPT_DIR/merge_matugen_config.py" \
         --base    "$MATUGEN_DIR/config.toml" \
         --conf-d  "$MATUGEN_CONF_D" \
-        --output  "$MERGED_MATUGEN_CONFIG"
+        --output  "$MERGED_MATUGEN_CONFIG" 2>/dev/null)
+    merge_exit=$?
 
-    # Apply matugen
-    matugen --config "$MERGED_MATUGEN_CONFIG" "${matugen_args[@]}"
+    # Notify the user for every skipped/corrupted config file
+    while IFS= read -r line; do
+        [[ "$line" != SKIPPED:* ]] && continue
+        # Format: SKIPPED:/path/to/file.toml:reason
+        skipped_rest="${line#SKIPPED:}"
+        skipped_path="${skipped_rest%%:*}"
+        skipped_reason="${skipped_rest#*:}"
+        notify-send \
+            -a "Wallpaper switcher" \
+            -u normal \
+            -i dialog-warning \
+            "Matugen: config file skipped" \
+            "$(basename "$skipped_path")\n$skipped_reason\n\nFull path: $skipped_path"
+        echo "[switchwall] Skipped matugen config: $skipped_path — $skipped_reason" >&2
+    done <<< "$merge_output"
+
+    if [[ $merge_exit -ne 0 ]]; then
+        notify-send \
+            -a "Wallpaper switcher" \
+            -u critical \
+            -i dialog-error \
+            "Matugen: config merge failed" \
+            "Could not produce a merged config.\nCheck $MATUGEN_DIR/config.toml and $MATUGEN_CONF_D/."
+        echo "[switchwall] merge_matugen_config.py exited with $merge_exit, aborting." >&2
+        return 1
+    fi
+
+    # Apply matugen, capture stderr, strip ANSI codes, notify on failure
+    matugen_stderr=$(matugen --config "$MERGED_MATUGEN_CONFIG" "${matugen_args[@]}" 2>&1)
+    matugen_exit=$?
+    if [[ $matugen_exit -ne 0 ]]; then
+        matugen_err_short=$(echo "$matugen_stderr" | strip_ansi | head -n 8)
+        notify-send \
+            -a "Wallpaper switcher" \
+            -u critical \
+            -i dialog-error \
+            "Matugen failed (exit $matugen_exit)" \
+            "$matugen_err_short"
+        echo "[switchwall] matugen failed (exit $matugen_exit):" >&2
+        echo "$matugen_stderr" >&2
+        return 1
+    fi
 
     source "$(eval echo $ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate"
-    python3 "$SCRIPT_DIR/generate_colors_material.py" "${generate_colors_material_args[@]}" \
-        > "$STATE_DIR"/user/generated/material_colors.scss
+    colorgen_stderr=$(python3 "$SCRIPT_DIR/generate_colors_material.py" "${generate_colors_material_args[@]}" \
+        > "$STATE_DIR"/user/generated/material_colors.scss 2>&1)
+    colorgen_exit=$?
     deactivate
+
+    if [[ $colorgen_exit -ne 0 ]]; then
+        colorgen_err_short=$(echo "$colorgen_stderr" | strip_ansi | head -n 8)
+        notify-send \
+            -a "Wallpaper switcher" \
+            -u critical \
+            -i dialog-error \
+            "Color generation failed (exit $colorgen_exit)" \
+            "$colorgen_err_short"
+        echo "[switchwall] generate_colors_material.py failed (exit $colorgen_exit):" >&2
+        echo "$colorgen_stderr" >&2
+        return 1
+    fi
+
     "$SCRIPT_DIR"/applycolor.sh
 
     # Pass screen width, height, and wallpaper path to post_process
