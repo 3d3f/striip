@@ -10,7 +10,6 @@ readonly SDDM_CONF_DROP_IN="/etc/sddm.conf.d/${THEME_NAME}.conf"
 
 readonly SYNC_FILES_DEST="${HOME}/.local/share/${THEME_NAME}"
 
-readonly MATUGEN_CONF="${HOME}/.config/matugen/config.toml"
 readonly MATUGEN_TEMPLATE_SECTION="striipsddm"
 
 readonly SUDOERS_FILE="/etc/sudoers.d/${THEME_NAME}-${USER}"
@@ -82,21 +81,13 @@ remove_sync_files() {
 remove_matugen_conf() {
     log_section "Removing matugen configuration"
 
-    if [[ ! -f "${MATUGEN_CONF}" ]]; then
-        log_warn "${MATUGEN_CONF} not found, skipping"
-        return
-    fi
+    local sddm_toml="${HOME}/.config/matugen/conf.d/sddm.toml"
 
-    if grep -q "^\[templates\.${MATUGEN_TEMPLATE_SECTION}\]" "${MATUGEN_CONF}"; then
-        local tmp
-        tmp="$(mktemp)"
-        awk "/^\[templates\.${MATUGEN_TEMPLATE_SECTION}\]/{skip=1; next} /^\[/{skip=0} !skip{print}" \
-            "${MATUGEN_CONF}" > "${tmp}"
-        sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' "${tmp}"
-        mv "${tmp}" "${MATUGEN_CONF}"
-        log_ok "Removed [templates.${MATUGEN_TEMPLATE_SECTION}] from ${MATUGEN_CONF}"
+    if [[ -f "${sddm_toml}" ]]; then
+        rm -f "${sddm_toml}"
+        log_ok "Removed ${sddm_toml}"
     else
-        log_warn "No [templates.${MATUGEN_TEMPLATE_SECTION}] block found, skipping"
+        log_warn "${sddm_toml} not found, skipping"
     fi
 }
 

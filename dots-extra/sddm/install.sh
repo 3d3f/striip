@@ -13,7 +13,6 @@ readonly SDDM_CONF_DROP_IN="/etc/sddm.conf.d/${THEME_NAME}.conf"
 readonly SYNC_FILES_SRC="${SCRIPT_DIR}/sync-files"
 readonly SYNC_FILES_DEST="${HOME}/.local/share/${THEME_NAME}"
 
-readonly MATUGEN_CONF="${HOME}/.config/matugen/config.toml"
 readonly MATUGEN_TEMPLATE_SECTION="striipsddm"
 readonly MATUGEN_INPUT="${SYNC_FILES_DEST}/SddmColors.qml"
 readonly MATUGEN_OUTPUT="${SYNC_FILES_DEST}/Colors.qml"
@@ -129,30 +128,17 @@ EOF
 configure_matugen() {
     log_section "Configuring matugen"
 
-    mkdir -p "$(dirname "${MATUGEN_CONF}")"
-    touch "${MATUGEN_CONF}"
+    local sddm_toml="${HOME}/.config/matugen/conf.d/sddm.toml"
+    mkdir -p "$(dirname "${sddm_toml}")"
 
-    # Remove existing block if present
-    if grep -q "^\[templates\.${MATUGEN_TEMPLATE_SECTION}\]" "${MATUGEN_CONF}"; then
-        log_info "Removing existing [templates.${MATUGEN_TEMPLATE_SECTION}] block"
-        local tmp
-        tmp="$(mktemp)"
-        awk "/^\[templates\.${MATUGEN_TEMPLATE_SECTION}\]/{skip=1; next} /^\[/{skip=0} !skip{print}" \
-            "${MATUGEN_CONF}" > "${tmp}"
-        # Strip trailing blank lines
-        sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' "${tmp}"
-        mv "${tmp}" "${MATUGEN_CONF}"
-    fi
-
-    cat >> "${MATUGEN_CONF}" <<EOF
-
+    cat > "${sddm_toml}" <<EOF
 [templates.${MATUGEN_TEMPLATE_SECTION}]
 input_path = '${MATUGEN_INPUT}'
 output_path = '${MATUGEN_OUTPUT}'
 post_hook = "${MATUGEN_POST_HOOK}"
 EOF
 
-    log_ok "Matugen block written to ${MATUGEN_CONF}"
+    log_ok "Matugen block written to ${sddm_toml}"
 }
 
 # Sudoers configuration

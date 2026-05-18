@@ -70,8 +70,7 @@ case "${SKIP_HYPRLAND}" in
 esac
 
 # For Matugen
-install_dir__sync_exclude dots/.config/matugen "$XDG_CONFIG_HOME"/matugen "custom"
-install_dir__ignore_existing "dots/.config/matugen/custom" "${XDG_CONFIG_HOME}/matugen/custom"
-cat "$XDG_CONFIG_HOME/matugen/custom/config.toml" >> "$XDG_CONFIG_HOME/matugen/config.toml"
+install_dir__sync_exclude dots/.config/matugen "$XDG_CONFIG_HOME"/matugen "conf.d"
+install_dir__ignore_existing "dots/.config/matugen/conf.d" "${XDG_CONFIG_HOME}/matugen/conf.d"
 
 install_file "dots/.local/share/icons/illogical-impulse.svg" "${XDG_DATA_HOME}"/icons/illogical-impulse.svg

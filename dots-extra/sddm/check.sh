@@ -9,7 +9,6 @@ readonly SDDM_CONF_DROP_IN="/etc/sddm.conf.d/${THEME_NAME}.conf"
 
 readonly SYNC_FILES_DEST="${HOME}/.local/share/${THEME_NAME}"
 
-readonly MATUGEN_CONF="${HOME}/.config/matugen/config.toml"
 readonly MATUGEN_TEMPLATE_SECTION="striipsddm"
 
 readonly SUDOERS_FILE="/etc/sudoers.d/${THEME_NAME}-${USER}"
@@ -104,15 +103,12 @@ check_sync_files() {
 check_matugen() {
     section "Matugen configuration"
 
-    if [[ ! -f "${MATUGEN_CONF}" ]]; then
-        fail "Matugen config not found: ${MATUGEN_CONF}"
-        return
-    fi
+    local sddm_toml="${HOME}/.config/matugen/conf.d/sddm.toml"
 
-    if grep -q "^\[templates\.${MATUGEN_TEMPLATE_SECTION}\]" "${MATUGEN_CONF}"; then
-        ok "[templates.${MATUGEN_TEMPLATE_SECTION}] block present"
+    if [[ -f "${sddm_toml}" ]]; then
+        ok "sddm.toml present: ${sddm_toml}"
     else
-        fail "[templates.${MATUGEN_TEMPLATE_SECTION}] block missing in ${MATUGEN_CONF}"
+        fail "sddm.toml missing: ${sddm_toml}"
     fi
 }
 
