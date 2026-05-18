@@ -106,7 +106,7 @@ Scope {
             Timer {
                 id: graceTimer
                 interval: 800
-                onTriggered: if (!dockRoot.isMouseOver) dockRoot.reveal = false
+                onTriggered: if (!dockRoot.shouldBeOpen) dockRoot.reveal = false
             }
 
             onRevealChanged: {
