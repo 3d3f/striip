@@ -75,7 +75,7 @@ Scope {
             }
 
             onWorkspaceEmptyChanged: {
-                if (!workspaceEmpty && !dockRoot.isMouseOver)
+                if (!workspaceEmpty && !dockRoot.isMouseOver && !dock.pinned)
                     dockRoot.reveal = false
             }
 
