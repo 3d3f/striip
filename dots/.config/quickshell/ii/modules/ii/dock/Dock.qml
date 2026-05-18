@@ -19,19 +19,18 @@ Scope {
 
     property bool pinned: Config.options?.dock.pinnedOnStartup ?? false
 
-    readonly property string dockEffectivePosition: {
-        const pos = Config.options?.dock.position ?? "bottom"
-        if (pos !== "auto") return pos
-        return (Config.options?.bar.bottom && !Config.options?.bar.vertical) ? "top" : "bottom"
-    }
-
     readonly property bool isVertical: dockEffectivePosition === "left" || dockEffectivePosition === "right"
-
     readonly property real dockHeight: Config.options?.dock.height ?? 50
     readonly property real buttonSize: Math.round(dockHeight * 0.85)
     readonly property real dotMargin: Math.round(dockHeight * 0.2)
     readonly property real buttonSlotSize: buttonSize + dotMargin * 2
     readonly property real dockThickness:  buttonSlotSize + Appearance.sizes.hyprlandGapsOut * 2
+
+    readonly property string dockEffectivePosition: {
+        const pos = Config.options?.dock.position ?? "bottom"
+        if (pos !== "auto") return pos
+        return (Config.options?.bar.bottom && !Config.options?.bar.vertical) ? "top" : "bottom"
+    }
 
     Variants {
         model: Quickshell.screens
@@ -47,16 +46,11 @@ Scope {
 
             property bool reveal: false
             property bool positionChanging: false
-            readonly property bool readyToReveal: reveal && (dockLoader.item?.ready ?? false)
-
-            // Drag and hover logic
-            property bool stripDragActive: false
-            property bool bodyDragActive: false
 
             readonly property bool isMouseOver: triggerStrip.containsMouse
-                || dockMouseArea.containsMouse
+                || (dockLoader.item?.containsMouse ?? false)
                 || triggerStripDrop.containsDrag
-                || bodyDropArea.containsDrag
+                || triggerStripDrop.containsDrag
                 || (dockLoader.item?.externalDragOver ?? false)
 
             readonly property bool shouldBeOpen: dock.pinned
@@ -97,7 +91,9 @@ Scope {
 
             mask: Region {
                 item: triggerStrip
-                Region { item: dockMouseArea }
+                Region { 
+                    item: dockLoader.item?.mouseArea ?? null 
+                }
             }
 
             Timer {
@@ -132,7 +128,7 @@ Scope {
 
             HyprlandFocusGrab {
                 id: dragFocusGrab
-                active: dockLoader.activeAsync && (dockLoader.item?.dragState ?? "idle") !== "idle"
+                active: dockLoader.activeAsync && (dockLoader.item ? dockLoader.item.dragState : "idle") !== "idle"
                 windows: [dockRoot]
                 onCleared: {
                     if (dockLoader.item && dockLoader.item.dragState !== "idle") {
@@ -142,18 +138,16 @@ Scope {
                 }
             }
 
-            // Trigger strip
             MouseArea {
                 id: triggerStrip
                 hoverEnabled: true
                 z: 1
-                readonly property real stripThickness: Appearance.sizes.hyprlandGapsOut ?? 5
+                readonly property real stripThickness: 2
 
                 width: dock.isVertical ? stripThickness : parent.width
                 height: dock.isVertical ? parent.height : stripThickness
 
                 state: dock.dockEffectivePosition
-
                 states: [
                     State {
                         name: "top"
@@ -173,105 +167,67 @@ Scope {
                     }
                 ]
 
-                anchors.horizontalCenter: dock.isVertical ? undefined : parent.horizontalCenter
-                anchors.verticalCenter: dock.isVertical ? parent.verticalCenter : undefined
-
                 DropArea {
                     id: triggerStripDrop
                     anchors.fill: parent
                 }
             }
 
-            // Dock body
-            MouseArea {
-                id: dockMouseArea
-                hoverEnabled: true
+            Item {
+                id: dockContentHost
+                anchors.fill: parent
 
-                readonly property real hiddenOffset: dockRoot.dockThickness - (Appearance.sizes.hyprlandGapsOut ?? 2)
-                readonly property real currentOffset: dockRoot.readyToReveal ? 0 : hiddenOffset
+                LazyLoader {
+                    id: dockLoader
+                    loading: true
+                    active: dockRoot.reveal || unloadTimer.running
 
-                width: dock.isVertical ? dockRoot.dockThickness : parent.width
-                height: dock.isVertical ? parent.height : dockRoot.dockThickness
+                    Item {
+                        id: wrapper
+                        parent: dockContentHost
+                        anchors.fill: parent
 
-                state: dock.dockEffectivePosition
+                        readonly property real slideOffset: (dockRoot.reveal && content.ready) ? 0 : dock.dockThickness
+                        readonly property Item mouseArea: dockMouseArea
+                        readonly property bool containsMouse: dockMouseArea.containsMouse
+                        readonly property string dragState: content.dragState
+                        readonly property bool requestDockShow: content.requestDockShow
+                        readonly property bool ready: content.ready
+                        // Exposed property from DockContent.qml
+                        readonly property bool externalDragOver: content.externalDragOver
 
-                states: [
-                    State {
-                        name: "top"
-                        AnchorChanges { target: dockMouseArea; anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.topMargin: -currentOffset }
-                    },
-                    State {
-                        name: "bottom"
-                        AnchorChanges { target: dockMouseArea; anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.bottomMargin: -currentOffset }
-                    },
-                    State {
-                        name: "left"
-                        AnchorChanges { target: dockMouseArea; anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.leftMargin: -currentOffset }
-                    },
-                    State {
-                        name: "right"
-                        AnchorChanges { target: dockMouseArea; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter }
-                        PropertyChanges { target: dockMouseArea; anchors.rightMargin: -currentOffset }
-                    }
-                ]
+                        function endDrag() { content.endDrag() }
+                        function endFileDrag() { content.endFileDrag() }
 
-                Behavior on anchors.topMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
-                Behavior on anchors.bottomMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
-                Behavior on anchors.leftMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
-                Behavior on anchors.rightMargin { animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(dockMouseArea) }
+                        opacity: (content.ready && !dockRoot.positionChanging) ? 1.0 : 0.0
 
-                DropArea {
-                    id: bodyDropArea
-                    anchors.fill: parent
-                    keys: ["text/uri-list"]
-                    onEntered: dockRoot.bodyDragActive = true
-                    onExited: dockRoot.bodyDragActive = false
-                }
-
-                Item {
-                    id: dockContentHost
-                    anchors.fill: parent
-
-                    LazyLoader {
-                        id: dockLoader
-                        loading: true
-                        active: dockRoot.reveal || unloadTimer.running
-
-                        Item {
-                            id: wrapper
-                            parent: dockContentHost
-                            anchors.fill: parent
-
-                            readonly property string dragState: content.dragState
-                            readonly property bool requestDockShow: content.requestDockShow
-                            readonly property bool ready: content.ready
-                            // Exposed property from DockContent.qml
-                            readonly property bool externalDragOver: content.externalDragOver
-
-                            function endDrag() { content.endDrag() }
-                            function endFileDrag() { content.endFileDrag() }
-                            function mimeIconFromPath(p) { return content.mimeIconFromPath(p) }
-
-                            readonly property bool contentReady: content.ready && !dockRoot.positionChanging
-                            opacity: contentReady ? 1.0 : 0.0
-
-                            StyledRectangularShadow { target: visualBackground }
+                        MouseArea {
+                            id: dockMouseArea
+                            anchors.centerIn: parent
+                            hoverEnabled: true
+                            width: dock.isVertical
+                                ? dock.buttonSlotSize
+                                : Math.min(content.implicitWidth, parent.width - Appearance.sizes.hyprlandGapsOut * 2)
+                            height: dock.isVertical
+                                ? Math.min(content.implicitHeight, parent.height - Appearance.sizes.hyprlandGapsOut * 2)
+                                : dock.buttonSlotSize
+        
                             Rectangle {
                                 id: visualBackground
-                                anchors.centerIn: parent
-                                width: dock.isVertical
-                                    ? dock.buttonSlotSize
-                                    : Math.min(content.implicitWidth, parent.width - Appearance.sizes.hyprlandGapsOut * 2)
-                                height: dock.isVertical
-                                    ? Math.min(content.implicitHeight, parent.height - Appearance.sizes.hyprlandGapsOut * 2)
-                                    : dock.buttonSlotSize
+                                anchors.fill: parent
                                 color: Appearance.colors.colLayer0
                                 border.width: 1
                                 border.color: Appearance.colors.colLayer0Border
                                 radius: Appearance.rounding.large
+
+                                StyledRectangularShadow { target: visualBackground }
+
+                                transform: Translate {
+                                    y: dock.isVertical ? 0 : (dock.dockEffectivePosition === "bottom" ? wrapper.slideOffset : -wrapper.slideOffset)
+                                    x: !dock.isVertical ? 0 : (dock.dockEffectivePosition === "right" ? wrapper.slideOffset : -wrapper.slideOffset)
+                                    Behavior on y { NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Easing.OutCubic } }
+                                    Behavior on x { NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Easing.OutCubic } }
+                                }
 
                                 DockContent {
                                     id: content
