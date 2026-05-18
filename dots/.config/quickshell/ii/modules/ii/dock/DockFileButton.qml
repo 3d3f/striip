@@ -70,7 +70,7 @@ DockButton {
     }
 
     readonly property string resolvedXdgIcon: {
-        TaskbarApps.iconThemeRevision   // reactive dependency — retriggers on theme change
+        TaskbarApps.iconThemeRevision   // reactive dependency, retriggers on theme change
         const dirs = TaskbarApps.xdgUserDirs
 
         if (root.isDirectory) {
@@ -273,8 +273,8 @@ DockButton {
 
                 // Force icon reload when the theme changes
                 backer.sourceSize: Qt.size(
-                    root.buttonSize + TaskbarApps.iconThemeRevision,
-                    root.buttonSize + TaskbarApps.iconThemeRevision
+                    root.buttonSize + (TaskbarApps.iconThemeRevision % 2),
+                    root.buttonSize + (TaskbarApps.iconThemeRevision % 2)
                 )
             }
 

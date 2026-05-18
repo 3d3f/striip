@@ -97,29 +97,13 @@ Singleton {
     }
 
     // Icon theme refresh
-    // Bumped several times after a theme change to force icon reload across the dock
-    // TODO if loading the wallpaper takes too much time, the icons fail to change, i didn't find a better way
+    // Ipc call from kde-material-you-colors-wrapper.sh
     property int iconThemeRevision: 0
 
-    Timer {
-        id: themeRefreshTimer
-        interval: 300
-        repeat: true
-        property int count: 0
-        onTriggered: {
+    IpcHandler {
+        target: "taskbar"
+        function refresh() {
             root.iconThemeRevision += 1
-            if (++count >= 6) {
-                count = 0
-                stop()
-            }
-        }
-    }
-
-    Connections {
-        target: Appearance.m3colors
-        function onM3primaryChanged() {
-            themeRefreshTimer.count = 0
-            themeRefreshTimer.restart()
         }
     }
 

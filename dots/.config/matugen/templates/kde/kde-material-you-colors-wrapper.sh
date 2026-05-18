@@ -46,3 +46,5 @@ esac
 source "$(eval echo $ILLOGICAL_IMPULSE_VIRTUAL_ENV)/bin/activate"
 kde-material-you-colors "$mode_flag" --color "$color" -sv "$sv_num"
 deactivate
+
+quickshell -c ii ipc call taskbar refresh 2>/dev/null || true
