@@ -291,7 +291,7 @@ Singleton {
             }
 
             property JsonObject dock: JsonObject {
-                property bool enable: false
+                property bool enable: true
                 property bool isolateMonitors: false
                 property bool monochromeIcons: true
                 property bool dimInactiveIcons: false
@@ -300,7 +300,7 @@ Singleton {
                 property bool enablePreview: true
                 property bool revealOnEmptyWorkspace: true
                 property string position: "bottom"
-                property list<string> pinnedApps: ["org.kde.dolphin", "kitty",]
+                property list<string> pinnedApps: ["org.kde.dolphin", "foot",]
                 property list<string> ignoredAppRegexes: []
                 property list<string> pinnedFiles: []
             }
@@ -327,7 +327,7 @@ Singleton {
 
             property JsonObject light: JsonObject {
                 property JsonObject night: JsonObject {
-                    property bool automatic: true
+                    property bool automatic: false
                     property string from: "19:00" // Format: "HH:mm", 24-hour time
                     property string to: "06:30"   // Format: "HH:mm", 24-hour time
                     property int colorTemperature: 5000
