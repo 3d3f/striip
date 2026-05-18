@@ -271,6 +271,13 @@ Scope {
                                 border.color: Appearance.colors.colLayer0Border
                                 radius: Appearance.rounding.large
 
+                                DockContent {
+                                    id: content
+                                    anchors.fill: parent
+                                    isPinned: dock.pinned
+                                    currentScreen: dockRoot.screen
+                                    onTogglePinRequested: dock.pinned = !dock.pinned
+                                }
 
                                 DropArea {
                                     id: fileDropArea
@@ -295,14 +302,6 @@ Scope {
                                         content.externalDragIcon = ""
                                         content.externalDragOver = false
                                     }
-                                }
-
-                                DockContent {
-                                    id: content
-                                    anchors.fill: parent
-                                    isPinned: dock.pinned
-                                    currentScreen: dockRoot.screen
-                                    onTogglePinRequested: dock.pinned = !dock.pinned
                                 }
                             }
                         }
