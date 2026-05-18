@@ -64,14 +64,16 @@ Scope {
                 || (dockLoader.item?.requestDockShow ?? false)
                 || (Config.options?.dock?.revealOnEmptyWorkspace && workspaceEmpty)
 
-            onShouldBeOpenChanged: {
-                if (shouldBeOpen) {
-                    reveal = true
+            function updateReveal() {
+                if (dockRoot.shouldBeOpen) {
                     graceTimer.stop()
-                } else {
+                    dockRoot.reveal = true
+                } else if (!graceTimer.running) {
                     graceTimer.restart()
                 }
             }
+
+            onShouldBeOpenChanged: Qt.callLater(dockRoot.updateReveal)
 
             readonly property bool workspaceEmpty: {
                 const wsId = HyprlandData.activeWorkspace?.id ?? -1
