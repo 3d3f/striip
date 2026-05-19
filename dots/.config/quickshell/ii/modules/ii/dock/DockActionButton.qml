@@ -11,7 +11,7 @@ DockButton {
     property int symbolSize: Math.round(root.buttonSize * 0.5)
     property string symbolName: ""
     property color activeColor: Appearance.m3colors.m3onPrimary
-    property color inactiveColor: Appearance.colors.colOnLayer0
+    property color inactiveColor: Appearance.colors.colOnSecondaryContainer
     property bool dragActive: false
     property string dragSymbol: ""
     property int normalShape: MaterialShape.Shape.Pill
