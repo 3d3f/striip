@@ -16,6 +16,7 @@ ContentPage {
             Component.onCompleted: IconThemeService.ensureInitialized()
             StyledComboBox {
                 id: iconThemeSelector
+                buttonIcon: "view_cozy"
                 textRole: "displayName"
                 model: IconThemeService.availableThemes.map(t => ({ displayName: t, value: t }))
                 currentIndex: {
