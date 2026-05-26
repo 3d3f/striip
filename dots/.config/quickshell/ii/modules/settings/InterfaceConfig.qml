@@ -13,10 +13,7 @@ ContentPage {
 
         ContentSubsection {
             title: Translation.tr("Icon Theme")
-            tooltip: Translation.tr("Select the icon theme applied system-wide.")
-
             Component.onCompleted: IconThemeService.ensureInitialized()
-
             StyledComboBox {
                 id: iconThemeSelector
                 textRole: "displayName"
