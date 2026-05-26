@@ -81,6 +81,7 @@ Singleton {
             property string panelFamily: "ii" // "ii"
 
             property JsonObject appearance: JsonObject {
+                property string iconTheme: "breeze-dark"
                 property bool extraBackgroundTint: true
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen
                 property JsonObject fonts: JsonObject {

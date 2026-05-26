@@ -19,7 +19,10 @@ Item {
         source: Quickshell.iconPath(TaskbarApps.getCachedIcon(root.appId), "image-missing")
         visible: !Config.options.dock.monochromeIcons
         opacity: root.iconOpacity
-        
+        backer.sourceSize: Qt.size(
+            parent.width + TaskbarApps.iconThemeRevision,
+            parent.height + TaskbarApps.iconThemeRevision
+        )
         Behavior on opacity {
             animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
         }

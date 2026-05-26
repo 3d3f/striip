@@ -29,6 +29,7 @@ ShellRoot {
         ConflictKiller.load()
         Cliphist.refresh()
         Wallpapers.load()
+        IconThemeService.ensureInitialized()
         Updates.load()
     }
 

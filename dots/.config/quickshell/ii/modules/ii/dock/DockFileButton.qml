@@ -273,8 +273,8 @@ DockButton {
 
                 // Force icon reload when the theme changes
                 backer.sourceSize: Qt.size(
-                    root.buttonSize + (TaskbarApps.iconThemeRevision % 2),
-                    root.buttonSize + (TaskbarApps.iconThemeRevision % 2)
+                    parent.width + TaskbarApps.iconThemeRevision,
+                    parent.height + TaskbarApps.iconThemeRevision
                 )
             }
 

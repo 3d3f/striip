@@ -8,6 +8,31 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        icon: "palette"
+        title: Translation.tr("Icons")
+
+        ContentSubsection {
+            title: Translation.tr("Icon Theme")
+            tooltip: Translation.tr("Select the icon theme applied system-wide.")
+
+            Component.onCompleted: IconThemeService.ensureInitialized()
+
+            StyledComboBox {
+                id: iconThemeSelector
+                textRole: "displayName"
+                model: IconThemeService.availableThemes.map(t => ({ displayName: t, value: t }))
+                currentIndex: {
+                    const idx = IconThemeService.availableThemes.indexOf(IconThemeService.currentTheme)
+                    return idx !== -1 ? idx : 0
+                }
+                onActivated: (index) => {
+                    IconThemeService.setTheme(model[index].value)
+                }
+            }
+        }
+    }
+
+    ContentSection {
         icon: "keyboard"
         title: Translation.tr("Cheat sheet")
 
