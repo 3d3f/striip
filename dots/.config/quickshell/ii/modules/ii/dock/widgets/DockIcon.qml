@@ -17,7 +17,7 @@ Item {
         id: baseIcon
         anchors.fill: parent
         source: Quickshell.iconPath(TaskbarApps.getCachedIcon(root.appId), "image-missing")
-        visible: !Config.options.dock.monochromeIcons
+        visible: !Config.options.appearance.icons.monochromeIcons
         opacity: root.iconOpacity
         backer.sourceSize: Qt.size(
             parent.width + IconThemeService.iconThemeRevision,
@@ -32,12 +32,12 @@ Item {
         anchors.fill: parent
         source: baseIcon
         desaturation: 0.8
-        visible: !root.isRunning && !Config.options.dock.monochromeIcons && Config.options.dock.dimInactiveIcons
+        visible: !root.isRunning && !Config.options.appearance.icons.monochromeIcons && Config.options.dock.dimInactiveIcons
         opacity: baseIcon.opacity
     }
 
     Loader {
-        active: Config.options.dock.monochromeIcons
+        active: Config.options.appearance.icons.monochromeIcons
         anchors.fill: parent
         sourceComponent: Item {
             Desaturate {

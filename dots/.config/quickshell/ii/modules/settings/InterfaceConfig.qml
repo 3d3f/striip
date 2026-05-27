@@ -10,7 +10,6 @@ ContentPage {
     ContentSection {
         icon: "palette"
         title: Translation.tr("Icons")
-
         ContentSubsection {
             title: Translation.tr("Icon Theme")
             Component.onCompleted: IconThemeService.ensureInitialized()
@@ -27,6 +26,12 @@ ContentPage {
                     IconThemeService.setTheme(model[index].value)
                 }
             }
+        }
+        ConfigSwitch {
+            buttonIcon: "colors"
+            text: Translation.tr("Tint app icons")
+            checked: Config.options.appearance.icons.monochromeIcons
+            onCheckedChanged: Config.options.appearance.icons.monochromeIcons = checked
         }
     }
 
@@ -166,15 +171,9 @@ ContentPage {
         ConfigRow {
             uniform: true
             ConfigSwitch {
-                buttonIcon: "colors"
-                text: Translation.tr("Tint app icons")
-                checked: Config.options.dock.monochromeIcons
-                onCheckedChanged: { Config.options.dock.monochromeIcons = checked; }
-            }
-            ConfigSwitch {
                 buttonIcon: "contrast"
                 text: Translation.tr("Dim inactive app icons")
-                enabled: !Config.options.dock.monochromeIcons
+                enabled: !Config.options.appearance.icons.monochromeIcons
                 checked: Config.options.dock.dimInactiveIcons
                 onCheckedChanged: { Config.options.dock.dimInactiveIcons = checked; }
                 StyledToolTip {

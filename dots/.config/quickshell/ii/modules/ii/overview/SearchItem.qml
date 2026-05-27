@@ -10,6 +10,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Hyprland
+import Qt5Compat.GraphicalEffects
 
 RippleButton {
     id: root
@@ -154,10 +155,34 @@ RippleButton {
 
         Component {
             id: iconImageComponent
-            IconImage {
-                source: Quickshell.iconPath(root.iconName, "image-missing")
+            Item {
                 width: 35
                 height: 35
+                IconImage {
+                    id: searchItemIcon
+                    anchors.fill: parent
+                    source: Quickshell.iconPath(root.iconName, "image-missing")
+                    visible: !Config.options.appearance.icons.monochromeIcons
+                }
+                Loader {
+                    active: Config.options.appearance.icons.monochromeIcons
+                    anchors.fill: parent
+                    sourceComponent: Item {
+                        anchors.fill: parent
+                        Desaturate {
+                            id: monoDesat
+                            anchors.fill: parent
+                            source: searchItemIcon
+                            desaturation: 0.8
+                            visible: false
+                        }
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: monoDesat
+                            color: ColorUtils.transparentize(Appearance.colors.colPrimary, 0.9)
+                        }
+                    }
+                }
             }
         }
 
@@ -285,9 +310,34 @@ RippleButton {
                         Loader {
                             anchors.centerIn: parent
                             active: actionButton.iconType === LauncherSearchResult.IconType.System && actionButton.iconName !== ""
-                            sourceComponent: IconImage {
-                                source: Quickshell.iconPath(actionButton.iconName)
-                                implicitSize: 20
+                            sourceComponent: Item {
+                                implicitWidth: 20
+                                implicitHeight: 20
+                                IconImage {
+                                    id: actionIcon
+                                    anchors.fill: parent
+                                    source: Quickshell.iconPath(actionButton.iconName)
+                                    visible: !Config.options.appearance.icons.monochromeIcons
+                                }
+                                Loader {
+                                    active: Config.options.appearance.icons.monochromeIcons
+                                    anchors.fill: parent
+                                    sourceComponent: Item {
+                                        anchors.fill: parent
+                                        Desaturate {
+                                            id: monoDesat
+                                            anchors.fill: parent
+                                            source: actionIcon
+                                            desaturation: 0.8
+                                            visible: false
+                                        }
+                                        ColorOverlay {
+                                            anchors.fill: parent
+                                            source: monoDesat
+                                            color: ColorUtils.transparentize(Appearance.colors.colPrimary, 0.9)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

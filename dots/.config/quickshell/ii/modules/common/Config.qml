@@ -81,7 +81,6 @@ Singleton {
             property string panelFamily: "ii" // "ii"
 
             property JsonObject appearance: JsonObject {
-                property string iconTheme: "breeze-dark"
                 property bool extraBackgroundTint: true
                 property int fakeScreenRounding: 2 // 0: None | 1: Always | 2: When not fullscreen
                 property JsonObject fonts: JsonObject {
@@ -113,6 +112,10 @@ Singleton {
                 property JsonObject palette: JsonObject {
                     property string type: "auto" // Allowed: auto, scheme-content, scheme-expressive, scheme-fidelity, scheme-fruit-salad, scheme-monochrome, scheme-neutral, scheme-rainbow, scheme-tonal-spot
                     property string accentColor: ""
+                }
+                property JsonObject icons: JsonObject {
+                    property bool monochromeIcons: false
+                    property string theme: "breeze-dark"  // ← puoi anche migrare iconTheme qui
                 }
             }
 
@@ -228,7 +231,6 @@ Singleton {
                     property bool showScreenRecord: false
                 }
                 property JsonObject workspaces: JsonObject {
-                    property bool monochromeIcons: true
                     property int shown: 10
                     property bool showAppIcons: true
                     property bool alwaysShowNumbers: false
@@ -294,7 +296,6 @@ Singleton {
             property JsonObject dock: JsonObject {
                 property bool enable: true
                 property bool isolateMonitors: false
-                property bool monochromeIcons: true
                 property bool dimInactiveIcons: false
                 property real height: 50
                 property bool pinnedOnStartup: false
@@ -427,7 +428,6 @@ Singleton {
             }
 
             property JsonObject tray: JsonObject {
-                property bool monochromeIcons: true
                 property bool showItemId: false
                 property bool invertPinnedItems: true // Makes the below a whitelist for the tray and blacklist for the pinned area
                 property list<var> pinnedItems: [ "Fcitx" ]

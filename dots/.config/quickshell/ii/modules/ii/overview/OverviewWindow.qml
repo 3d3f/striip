@@ -119,25 +119,46 @@ Item { // Window
                 centerIn: root.centerIcons ? parent : undefined
                 margins: baseSize * root.iconGapRatio
             }
-            property var iconSize: {
-                // console.log("-=-=-", root.toplevel.title, "-=-=-")
-                // console.log("Target window size:", targetWindowWidth, targetWindowHeight)
-                // console.log("Icon ratio:", root.compactMode ? root.iconToWindowRatioCompact : root.iconToWindowRatio)
-                // console.log("Scale:", root.monitorData.scale)
-                // console.log("Final:", Math.min(targetWindowWidth, targetWindowHeight) * (root.compactMode ? root.iconToWindowRatioCompact : root.iconToWindowRatio) / root.monitorData.scale)
-                return baseSize * (root.compactMode ? root.iconToWindowRatioCompact : root.iconToWindowRatio);
-            }
+            property var iconSize: baseSize * (root.compactMode ? root.iconToWindowRatioCompact : root.iconToWindowRatio)
             mipmap: true
             Layout.alignment: Qt.AlignHCenter
             source: root.iconPath
             width: iconSize
             height: iconSize
+            visible: !Config.options.appearance.icons.monochromeIcons
 
             Behavior on width {
                 animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
             }
             Behavior on height {
                 animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
+            }
+        }
+
+        Loader {
+            active: Config.options.appearance.icons.monochromeIcons
+            anchors {
+                top: root.centerIcons ? undefined : windowPreview.top
+                left: root.centerIcons ? undefined : windowPreview.left
+                centerIn: root.centerIcons ? windowPreview : undefined
+                margins: windowIcon.baseSize * root.iconGapRatio
+            }
+            width: windowIcon.iconSize
+            height: windowIcon.iconSize
+            sourceComponent: Item {
+                anchors.fill: parent
+                Desaturate {
+                    id: monoDesat
+                    anchors.fill: parent
+                    source: windowIcon
+                    desaturation: 0.8
+                    visible: false
+                }
+                ColorOverlay {
+                    anchors.fill: parent
+                    source: monoDesat
+                    color: ColorUtils.transparentize(Appearance.colors.colPrimary, 0.9)
+                }
             }
         }
     }

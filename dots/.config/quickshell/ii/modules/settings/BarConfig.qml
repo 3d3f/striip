@@ -153,15 +153,6 @@ ContentPage {
                 Config.options.tray.invertPinnedItems = checked;
             }
         }
-        
-        ConfigSwitch {
-            buttonIcon: "colors"
-            text: Translation.tr('Tint icons')
-            checked: Config.options.tray.monochromeIcons
-            onCheckedChanged: {
-                Config.options.tray.monochromeIcons = checked;
-            }
-        }
     }
 
     ContentSection {

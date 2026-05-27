@@ -79,9 +79,35 @@ Item {
     
     Component {
         id: fileComponent
-        IconImage {
+        Item {
             anchors.fill: parent
-            source: root.fileResolvedIcon
+
+            IconImage {
+                id: ghostFileIcon
+                anchors.fill: parent
+                source: root.fileResolvedIcon
+                visible: !Config.options.appearance.icons.monochromeIcons
+            }
+
+            Loader {
+                active: Config.options.appearance.icons.monochromeIcons
+                anchors.fill: parent
+                sourceComponent: Item {
+                    anchors.fill: parent
+                    Desaturate {
+                        id: monoDesat
+                        anchors.fill: parent
+                        source: ghostFileIcon
+                        desaturation: 0.8
+                        visible: false
+                    }
+                    ColorOverlay {
+                        anchors.fill: parent
+                        source: monoDesat
+                        color: ColorUtils.transparentize(Appearance.colors.colPrimary, 0.9)
+                    }
+                }
+            }
         }
     }
 

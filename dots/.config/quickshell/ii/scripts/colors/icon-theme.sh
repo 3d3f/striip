@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 case "$1" in
-list)
-    for d in /usr/share/icons/*/ ~/.local/share/icons/*/; do
-        [ -d "$d" ] || continue
-        [ -f "${d}index.theme" ] || continue
-        [ -d "${d}cursors" ] && ! ([ -d "${d}scalable" ] || [ -d "${d}32x32" ] || [ -d "${d}48x48" ]) && continue
-        name=$(basename "$d")
-        case "$name" in
-            hicolor|default|locolor|HighContrast) continue ;;
-        esac
-        echo "$name"
-    done | sort -u
-    ;;
+    list)
+        for d in /usr/share/icons/*/ ~/.local/share/icons/*/; do
+            [ -d "$d" ] || continue
+            [ -f "${d}index.theme" ] || continue
+            [ -d "${d}cursors" ] && ! ([ -d "${d}scalable" ] || [ -d "${d}32x32" ] || [ -d "${d}48x48" ]) && continue
+            name=$(basename "$d")
+            case "$name" in
+                hicolor|default|locolor|HighContrast) continue ;;
+            esac
+            echo "$name"
+        done | sort -u
+        ;;
 
     get)
         gsettings get org.gnome.desktop.interface icon-theme | tr -d "'"

@@ -290,7 +290,7 @@ Item {
                         }
 
                         Loader {
-                            active: Config.options.bar.workspaces.monochromeIcons
+                            active: Config.options.appearance.icons.monochromeIcons
                             anchors.fill: mainAppIcon
                             sourceComponent: Item {
                                 Desaturate {

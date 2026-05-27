@@ -263,7 +263,7 @@ DockButton {
             IconImage {
                 id: xdgIcon
                 anchors.centerIn: parent
-                visible: !root.isImage && root.resolvedXdgIcon !== ""
+                visible: !root.isImage && root.resolvedXdgIcon !== "" && !Config.options.appearance.icons.monochromeIcons
 
                 implicitSize: root.buttonSize
                 width: root.buttonSize
@@ -271,11 +271,32 @@ DockButton {
 
                 source: root.resolvedXdgIcon
 
-                // Force icon reload when the theme changes
                 backer.sourceSize: Qt.size(
                     parent.width + IconThemeService.iconThemeRevision,
                     parent.height + IconThemeService.iconThemeRevision
                 )
+            }
+
+            Loader {
+                active: !root.isImage && root.resolvedXdgIcon !== "" && Config.options.appearance.icons.monochromeIcons
+                anchors.centerIn: parent
+                width: root.buttonSize
+                height: root.buttonSize
+                sourceComponent: Item {
+                    anchors.fill: parent
+                    Desaturate {
+                        id: monoDesat
+                        anchors.fill: parent
+                        source: xdgIcon
+                        desaturation: 0.8
+                        visible: false
+                    }
+                    ColorOverlay {
+                        anchors.fill: parent
+                        source: monoDesat
+                        color: ColorUtils.transparentize(Appearance.colors.colPrimary, 0.9)
+                    }
+                }
             }
 
             // Fallback folder icon for directories with no specific XDG icon

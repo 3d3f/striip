@@ -21,13 +21,13 @@ Singleton {
         if (!t) return
         
         root.currentTheme = t
-        Config.setNestedValue('appearance.iconTheme', t)        
+        Config.setNestedValue('appearance.icons.theme', t)        
         Quickshell.execDetached([Directories.themeScriptPath, "set", t])
     }
 
     Process {
         running: Config.ready
-        command: [Directories.themeScriptPath, "set", Config.options.appearance.iconTheme]
+        command: [Directories.themeScriptPath, "set", Config.options.appearance.icons.theme]
     }
 
     Process {
