@@ -20,8 +20,8 @@ Item {
         visible: !Config.options.dock.monochromeIcons
         opacity: root.iconOpacity
         backer.sourceSize: Qt.size(
-            parent.width + TaskbarApps.iconThemeRevision,
-            parent.height + TaskbarApps.iconThemeRevision
+            parent.width + IconThemeService.iconThemeRevision,
+            parent.height + IconThemeService.iconThemeRevision
         )
         Behavior on opacity {
             animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)

@@ -50,4 +50,17 @@ Singleton {
             }
         }
     }
+
+    // Icon theme refresh with ipc calls from scripts:
+    // icon-theme.sh
+    // kde-material-you-colors-wrapper
+    // TODO: I want to replace ipc calls with reactive QML bindings, if i can find a way
+    property int iconThemeRevision: 0
+
+    IpcHandler {
+        target: "iconservice"
+        function refresh() {
+            IconThemeService.iconThemeRevision += 1
+        }
+    }
 }
