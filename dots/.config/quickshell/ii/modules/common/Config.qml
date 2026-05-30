@@ -114,8 +114,8 @@ Singleton {
                     property string accentColor: ""
                 }
                 property JsonObject icons: JsonObject {
-                    property bool monochromeIcons: false
-                    property string theme: "breeze-dark"  // ← puoi anche migrare iconTheme qui
+                    property bool monochromeIcons: true
+                    property string theme: "breeze-dark"
                 }
             }
 
@@ -297,7 +297,7 @@ Singleton {
                 property bool enable: true
                 property bool isolateMonitors: false
                 property bool dimInactiveIcons: false
-                property real height: 50
+                property real height: 45
                 property bool pinnedOnStartup: false
                 property bool enablePreview: true
                 property bool revealOnEmptyWorkspace: true
