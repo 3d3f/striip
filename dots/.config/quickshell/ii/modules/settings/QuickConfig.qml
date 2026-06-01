@@ -60,7 +60,11 @@ ContentPage {
                     id: wallpaperPreview
                     anchors.fill: parent
                     fillMode: Image.PreserveAspectCrop
-                    source: Config.options.background.wallpaperPath
+                    source: {
+                        const path = Config.options.background.wallpaperPath;
+                        const isVideo = ["mp4","webm","mkv","avi","mov"].some(ext => path.endsWith("." + ext));
+                        return isVideo ? Config.options.background.thumbnailPath : path;
+                    }
                     cache: false
                     layer.enabled: true
                     layer.effect: OpacityMask {

@@ -53,7 +53,6 @@ Variants {
         screen: modelData
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: (GlobalStates.screenLocked && !scaleAnim.running) ? WlrLayer.Overlay : WlrLayer.Bottom
-        // WlrLayershell.layer: WlrLayer.Bottom
         WlrLayershell.namespace: "quickshell:background"
         anchors {
             top: true
@@ -69,15 +68,13 @@ Variants {
         Item {
             anchors.fill: parent
 
-            // Wallpaper
-            StyledImage {
+            TransitionImage {
                 id: wallpaper
                 anchors.fill: parent
-                visible: opacity > 0 && !blurLoader.active
-                opacity: (status === Image.Ready && !bgRoot.wallpaperIsVideo) ? 1 : 0
-                cache: false
-                smooth: false
-                source: bgRoot.wallpaperPath
+                visible: !blurLoader.active
+                opacity: bgRoot.wallpaperIsVideo ? 0 : 1
+                imageSource: bgRoot.wallpaperPath
+                animated: !bgRoot.wallpaperIsVideo && Config.options.background.animateWallpaperChanges
                 fillMode: Image.PreserveAspectCrop
             }
 
