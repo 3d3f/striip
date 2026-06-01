@@ -36,6 +36,7 @@ Variants {
 
         // Wallpaper
         property bool wallpaperIsVideo: Config.options.background.wallpaperPath.endsWith(".mp4") || Config.options.background.wallpaperPath.endsWith(".webm") || Config.options.background.wallpaperPath.endsWith(".mkv") || Config.options.background.wallpaperPath.endsWith(".avi") || Config.options.background.wallpaperPath.endsWith(".mov")
+        property bool wallpaperIsGif: Config.options.background.wallpaperPath.toLowerCase().endsWith(".gif")
         property string wallpaperPath: wallpaperIsVideo ? Config.options.background.thumbnailPath : Config.options.background.wallpaperPath
 
         // Colors
@@ -68,14 +69,35 @@ Variants {
         Item {
             anchors.fill: parent
 
-            TransitionImage {
-                id: wallpaper
+            Item {
+                id: wallpaperContent
                 anchors.fill: parent
-                visible: !blurLoader.active
-                opacity: bgRoot.wallpaperIsVideo ? 0 : 1
-                imageSource: bgRoot.wallpaperPath
-                animated: !bgRoot.wallpaperIsVideo && Config.options.background.animateWallpaperChanges
-                fillMode: Image.PreserveAspectCrop
+
+                TransitionImage {
+                    id: wallpaper
+                    anchors.fill: parent
+                    visible: !bgRoot.wallpaperIsGif
+                    opacity: (bgRoot.wallpaperIsVideo || bgRoot.wallpaperIsGif) ? 0 : 1
+                    imageSource: bgRoot.wallpaperPath
+                    animated: !bgRoot.wallpaperIsVideo && Config.options.background.animateWallpaperChanges
+                    fillMode: Image.PreserveAspectCrop
+                }
+
+                AnimatedImage {
+                    id: gifWallpaper
+                    anchors.fill: parent
+                    asynchronous: true
+                    retainWhileLoading: true
+                    visible: opacity > 0
+                    opacity: (status === AnimatedImage.Ready) ? 1 : 0
+                    Behavior on opacity {
+                        animation: Appearance.animation.elementMoveEnter.numberAnimation.createObject(this)
+                    }
+                    source: bgRoot.wallpaperIsGif ? ("file://" + Config.options.background.wallpaperPath) : ""
+                    fillMode: Image.PreserveAspectCrop
+                    playing: bgRoot.wallpaperIsGif && !GlobalStates.screenLocked
+                    cache: false
+                }
             }
 
             Loader {
@@ -92,7 +114,7 @@ Variants {
                     }
                 }
                 sourceComponent: GaussianBlur {
-                    source: wallpaper
+                    source: wallpaperContent
                     radius: GlobalStates.screenLocked ? Config.options.lock.blur.radius : 0
                     samples: radius * 2 + 1
 
