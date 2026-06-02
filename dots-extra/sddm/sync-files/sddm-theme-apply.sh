@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-## TODO: Video wallpaper path from matugen points to thumbnail from matugen in ii, find a way to get the original video path
 set -euo pipefail
 
-# Security: Validate and sanitize paths
+# --- Security: Validate and sanitize paths ---
 validate_path() {
     local path="$1"
     local description="$2"
@@ -21,7 +20,7 @@ validate_path() {
     realpath "$path"
 }
 
-# Local user name
+# --- Local user name ---
 REAL_USER="${SUDO_USER:-$USER}"
 USER_HOME="$(eval echo "~$REAL_USER")"
 
@@ -30,12 +29,14 @@ if [ -z "$USER_HOME" ] || [ ! -d "$USER_HOME" ]; then
     exit 1
 fi
 
-# Directories
+# --- Directories ---
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="/usr/share/sddm/themes/striip-sddm"
 
-# Colors.qml source
+# --- QML and Config Sources ---
 COLORS_QML_SOURCE="$SCRIPT_DIR/Colors.qml"
+SETTINGS_QML_SOURCE="$SCRIPT_DIR/Settings.qml"
+CONF_FILE="$SCRIPT_DIR/striip-sddm.conf"
 
 # Validate destination parent directory
 if [ ! -d "$(dirname "$(dirname "$DEST")")" ]; then
@@ -43,16 +44,24 @@ if [ ! -d "$(dirname "$(dirname "$DEST")")" ]; then
     exit 2
 fi
 
-# Extract wallpaper path (line 5)
-if [ ! -f "$COLORS_QML_SOURCE" ]; then
-    echo "Error: Colors.qml not found at: $COLORS_QML_SOURCE" >&2
-    exit 3
+# --- Extract wallpaper path ---
+WALLPAPER_PATH=""
+
+# Extract wallpaper path from generated Settings.qml
+if [ -f "$SETTINGS_QML_SOURCE" ]; then
+    WALLPAPER_PATH=$(grep "background_wallpaperPath:" "$SETTINGS_QML_SOURCE" | cut -d '"' -f 2 || true)
 fi
 
-WALLPAPER_PATH=$(sed -n '5p' "$COLORS_QML_SOURCE" | sed 's/^\/\/\s*//' | xargs)
+# Fallback from Colors.qml
+if [ -z "$WALLPAPER_PATH" ]; then
+    if [ -f "$COLORS_QML_SOURCE" ]; then
+        echo "Warning: wallpaper path not found in Settings.qml, using fallback from Colors.qml" >&2
+        WALLPAPER_PATH=$(sed -n '5p' "$COLORS_QML_SOURCE" | sed 's/^\/\/\s*//' | xargs || true)
+    fi
+fi
 
 if [ -z "$WALLPAPER_PATH" ]; then
-    echo "Error: Could not extract wallpaper path from line 5 of $COLORS_QML_SOURCE." >&2
+    echo "Error: Could not extract wallpaper path from Settings.qml or Colors.qml." >&2
     exit 4
 fi
 
@@ -74,7 +83,7 @@ if [ ! -f "$WALLPAPER_PATH" ]; then
     exit 5
 fi
 
-# Determine type and extension
+# --- Determine type and extension ---
 WALLPAPER_BASENAME="$(basename "$WALLPAPER_PATH")"
 WALLPAPER_EXT="${WALLPAPER_BASENAME##*.}"
 WALLPAPER_EXT_LOWER=$(echo "$WALLPAPER_EXT" | tr '[:upper:]' '[:lower:]')
@@ -97,8 +106,7 @@ if [ "$IS_IMAGE" = false ] && [ "$IS_VIDEO" = false ]; then
     exit 6
 fi
 
-# Modify striip-sddm.conf dynamically
-CONF_FILE="$SCRIPT_DIR/striip-sddm.conf"
+# --- Modify striip-sddm.conf dynamically ---
 if [ ! -f "$CONF_FILE" ]; then
     echo "Error: striip-sddm.conf not found in $SCRIPT_DIR" >&2
     exit 9
@@ -122,32 +130,25 @@ else
         "$CONF_FILE"
 fi
 
-# Validate required files
+# --- Validate required files ---
 REQUIRED_FILES=(
-    "$SCRIPT_DIR/Colors.qml"
-    "$SCRIPT_DIR/Settings.qml"
+    "$COLORS_QML_SOURCE"
+    "$SETTINGS_QML_SOURCE"
     "$CONF_FILE"
 )
 
 for file in "${REQUIRED_FILES[@]}"; do
-    if [ ! -f "$file" ]; then
-        echo "Error: required file not found: $file" >&2
+    if [ ! -f "$file" ] || [ -L "$file" ]; then
+        echo "Error: required file missing or invalid: $file" >&2
         exit 7
-    fi
-    if [ -L "$file" ]; then
-        echo "Error: required file is a symbolic link (not allowed): $file" >&2
-        exit 8
     fi
 done
 
-# Copy to destination
+# --- Copy to destination ---
+sudo mkdir -p -m 755 "$DEST/Components" "$DEST/Backgrounds" "$DEST/Themes"
 
-sudo mkdir -p -m 755 "$DEST/Components"
-sudo mkdir -p -m 755 "$DEST/Backgrounds"
-sudo mkdir -p -m 755 "$DEST/Themes"
-
-sudo cp --no-dereference --preserve=mode,timestamps "$SCRIPT_DIR/Colors.qml" "$DEST/Components/Colors.qml"
-sudo cp --no-dereference --preserve=mode,timestamps "$SCRIPT_DIR/Settings.qml" "$DEST/Components/Settings.qml"
+sudo cp --no-dereference --preserve=mode,timestamps "$COLORS_QML_SOURCE" "$DEST/Components/Colors.qml"
+sudo cp --no-dereference --preserve=mode,timestamps "$SETTINGS_QML_SOURCE" "$DEST/Components/Settings.qml"
 sudo cp --no-dereference --preserve=mode,timestamps "$WALLPAPER_PATH" "$DEST/Backgrounds/$BACKGROUND_FILENAME"
 sudo cp --no-dereference --preserve=mode,timestamps "$CONF_FILE" "$DEST/Themes/striip-sddm.conf"
 
