@@ -2,7 +2,7 @@ import QtQuick
 pragma Singleton
 
 // Don't edit this file or the script won't pick up the right background
-// /home/fede/Pictures/Wallpapers/default_wallpaper.png
+// ~/.config/quickshell/ii/assets/images/default_wallpaper.png
 QtObject {
     property real contentTransparency: 0.57
     property real backgroundTransparency: 0

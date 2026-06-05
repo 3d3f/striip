@@ -107,8 +107,8 @@ def main() -> None:
     """
     # 1. Source verification
     if not SOURCE_CONFIG.exists():
-        print(f"ERROR: Source configuration not found: {SOURCE_CONFIG}", file=sys.stderr)
-        sys.exit(1)
+        print(f"WARNING: Source configuration not found: {SOURCE_CONFIG}, skipping Settings.qml generation", file=sys.stderr)
+        sys.exit(0)
 
     # 2. Synchronize local config
     try:

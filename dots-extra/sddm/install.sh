@@ -132,6 +132,8 @@ configure_matugen() {
     mkdir -p "$(dirname "${sddm_toml}")"
 
     cat > "${sddm_toml}" <<EOF
+[config]
+
 [templates.${MATUGEN_TEMPLATE_SECTION}]
 input_path = '${MATUGEN_INPUT}'
 output_path = '${MATUGEN_OUTPUT}'
@@ -175,32 +177,38 @@ initial_matugen() {
     log_section "Running initial matugen"
 
     local shell_config="${HOME}/.config/illogical-impulse/config.json"
+    local sddm_toml="${HOME}/.config/matugen/conf.d/sddm.toml"
     local default_wallpaper
     default_wallpaper="$(realpath "${SCRIPT_DIR}/../../dots/.config/quickshell/ii/assets/images/default_wallpaper.png")"
 
     local wallpaper_path=""
 
     if [[ -f "${shell_config}" ]]; then
-        wallpaper_path="$(jq -r '.background.wallpaperPath // empty' "${shell_config}" 2>/dev/null || true)"
+        log_info "config.json found, running generate_settings.py"
+        if python3 "${SYNC_FILES_DEST}/generate_settings.py"; then
+            wallpaper_path="$(jq -r '.background.wallpaperPath // empty' "${shell_config}" 2>/dev/null || true)"
+        else
+            log_warn "generate_settings.py failed, falling back to default wallpaper"
+        fi
     fi
 
     if [[ -z "${wallpaper_path}" || ! -f "${wallpaper_path}" ]]; then
-        log_warn "No wallpaper found in config, using default"
+        log_warn "No valid wallpaper found in config, using default"
         wallpaper_path="${default_wallpaper}"
     fi
 
     if [[ ! -f "${wallpaper_path}" ]]; then
         log_warn "Default wallpaper not found at ${wallpaper_path}, skipping matugen"
-        log_warn "Run 'matugen image <path>' manually to complete setup"
+        log_warn "Run 'matugen -c ${sddm_toml} image <path>' manually to complete setup"
         return
     fi
 
     log_info "Using wallpaper: ${wallpaper_path}"
 
-    if matugen image "${wallpaper_path}" --source-color-index 0; then
+    if matugen -c "${sddm_toml}" image "${wallpaper_path}" --source-color-index 0; then
         log_ok "matugen completed successfully"
     else
-        log_warn "matugen failed, run 'matugen image <path>' manually to complete setup"
+        log_warn "matugen failed, run 'matugen -c ${sddm_toml} image <path>' manually to complete setup"
     fi
 }
 

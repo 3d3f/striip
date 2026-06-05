@@ -56,7 +56,7 @@ fi
 if [ -z "$WALLPAPER_PATH" ]; then
     if [ -f "$COLORS_QML_SOURCE" ]; then
         echo "Warning: wallpaper path not found in Settings.qml, using fallback from Colors.qml" >&2
-        WALLPAPER_PATH=$(sed -n '5p' "$COLORS_QML_SOURCE" | sed 's/^\/\/\s*//' | xargs || true)
+        WALLPAPER_PATH=$(sed -n '5p' "$COLORS_QML_SOURCE" | sed 's/^\/\/ *//' | xargs || true)
     fi
 fi
 
@@ -133,7 +133,6 @@ fi
 # --- Validate required files ---
 REQUIRED_FILES=(
     "$COLORS_QML_SOURCE"
-    "$SETTINGS_QML_SOURCE"
     "$CONF_FILE"
 )
 
@@ -148,7 +147,10 @@ done
 sudo mkdir -p -m 755 "$DEST/Components" "$DEST/Backgrounds" "$DEST/Themes"
 
 sudo cp --no-dereference --preserve=mode,timestamps "$COLORS_QML_SOURCE" "$DEST/Components/Colors.qml"
-sudo cp --no-dereference --preserve=mode,timestamps "$SETTINGS_QML_SOURCE" "$DEST/Components/Settings.qml"
+if [ -f "$SETTINGS_QML_SOURCE" ]; then
+    sudo cp --no-dereference --preserve=mode,timestamps "$SETTINGS_QML_SOURCE" "$DEST/Components/Settings.qml"
+    sudo chmod 644 "$DEST/Components/Settings.qml"
+fi
 sudo cp --no-dereference --preserve=mode,timestamps "$WALLPAPER_PATH" "$DEST/Backgrounds/$BACKGROUND_FILENAME"
 sudo cp --no-dereference --preserve=mode,timestamps "$CONF_FILE" "$DEST/Themes/striip-sddm.conf"
 
@@ -160,6 +162,5 @@ fi
 
 sudo chmod 644 \
     "$DEST/Components/Colors.qml" \
-    "$DEST/Components/Settings.qml" \
     "$DEST/Backgrounds/$BACKGROUND_FILENAME" \
     "$DEST/Themes/striip-sddm.conf"
