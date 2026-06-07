@@ -142,6 +142,13 @@ ContentPage {
         }
 
         ConfigSwitch {
+            buttonIcon: "keep"
+            text: Translation.tr("Pinned on startup")
+            checked: Config.options.dock.pinnedOnStartup
+            onCheckedChanged: { Config.options.dock.pinnedOnStartup = checked; }
+        }
+
+        ConfigSwitch {
             buttonIcon: "desktop_windows"
             text: Translation.tr("Isolate monitors")
             checked: Config.options.dock.isolateMonitors ?? false
@@ -155,34 +162,11 @@ ContentPage {
             onCheckedChanged: { Config.options.dock.enablePreview = checked; }
         }
 
-        ConfigRow {
-            uniform: true
-            ConfigSwitch {
-                buttonIcon: "computer_arrow_up"
-                text: Translation.tr("Reveal on empty workspace")
-                checked: Config.options.dock.revealOnEmptyWorkspace
-                onCheckedChanged: { Config.options.dock.revealOnEmptyWorkspace = checked; }
-            }
-            ConfigSwitch {
-                buttonIcon: "keep"
-                text: Translation.tr("Pinned on startup")
-                checked: Config.options.dock.pinnedOnStartup
-                onCheckedChanged: { Config.options.dock.pinnedOnStartup = checked; }
-            }
-        }
-
-        ConfigRow {
-            uniform: true
-            ConfigSwitch {
-                buttonIcon: "contrast"
-                text: Translation.tr("Dim inactive app icons")
-                enabled: !Config.options.appearance.icons.monochromeIcons
-                checked: Config.options.dock.dimInactiveIcons
-                onCheckedChanged: { Config.options.dock.dimInactiveIcons = checked; }
-                StyledToolTip {
-                    text: Translation.tr("Greyscale icons for pinned apps that are not running.\nDisabled when 'Tint app icons' is active.")
-                }
-            }
+        ConfigSwitch {
+            buttonIcon: "computer_arrow_up"
+            text: Translation.tr("Reveal on empty workspace")
+            checked: Config.options.dock.revealOnEmptyWorkspace
+            onCheckedChanged: { Config.options.dock.revealOnEmptyWorkspace = checked; }
         }
 
         ConfigSpinBox {

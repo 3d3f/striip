@@ -299,7 +299,6 @@ Singleton {
             property JsonObject dock: JsonObject {
                 property bool enable: true
                 property bool isolateMonitors: false
-                property bool dimInactiveIcons: false
                 property real height: 45
                 property bool pinnedOnStartup: false
                 property bool enablePreview: true
