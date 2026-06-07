@@ -10,6 +10,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "aboutDistro"
         icon: "box"
         title: Translation.tr("Distro")
         
@@ -79,6 +80,7 @@ ContentPage {
 
     }
     ContentSection {
+        settingKey: "aboutDotfiles"
         icon: "folder_managed"
         title: Translation.tr("Dotfiles")
 

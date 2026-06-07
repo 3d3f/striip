@@ -8,6 +8,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "barNotifications"
         icon: "notifications"
         title: Translation.tr("Notifications")
         ConfigSwitch {
@@ -21,6 +22,7 @@ ContentPage {
     }
     
     ContentSection {
+        settingKey: "barPositioning"
         icon: "spoke"
         title: Translation.tr("Positioning")
 
@@ -142,6 +144,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "barTray"
         icon: "shelf_auto_hide"
         title: Translation.tr("Tray")
 
@@ -156,6 +159,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "barUtilityButtons"
         icon: "widgets"
         title: Translation.tr("Utility buttons")
 
@@ -230,6 +234,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "barWeather"
         icon: "cloud"
         title: Translation.tr("Weather")
         ConfigSwitch {
@@ -243,6 +248,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "barWorkspaces"
         icon: "workspaces"
         title: Translation.tr("Workspaces")
 
@@ -327,6 +333,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "barTooltips"
         icon: "tooltip"
         title: Translation.tr("Tooltips")
         ConfigSwitch {

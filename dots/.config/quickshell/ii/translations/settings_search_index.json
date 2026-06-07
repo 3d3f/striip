@@ -1,0 +1,353 @@
+[
+  {
+    "section": "quickWallpaperColors",
+    "label": "Wallpaper & Colors",
+    "tabIndex": 0,
+    "category": "Quick",
+    "icon": "format_paint",
+    "description": "Quick access to wallpaper and color theme settings",
+    "keywords": ["accent", "background", "color", "image", "matugen", "palette", "picture", "scheme", "theme", "wallpaper"]
+  },
+  {
+    "section": "quickBarScreen",
+    "label": "Bar & Screen",
+    "tabIndex": 0,
+    "category": "Quick",
+    "icon": "screenshot_monitor",
+    "description": "Quick access to bar and screen settings",
+    "keywords": ["bar", "display", "monitor", "screen", "taskbar"]
+  },
+  {
+    "section": "generalAudio",
+    "label": "Audio",
+    "tabIndex": 1,
+    "category": "General",
+    "icon": "volume_up",
+    "description": "Audio volume protection and limits",
+    "keywords": ["audio", "bang", "loud", "max", "protect", "sound", "volume"]
+  },
+  {
+    "section": "generalBattery",
+    "label": "Battery",
+    "tabIndex": 1,
+    "category": "General",
+    "icon": "battery_android_full",
+    "description": "Battery warning thresholds and automatic suspend",
+    "keywords": ["battery", "charging", "critical", "full", "low", "power", "suspend", "threshold"]
+  },
+  {
+    "section": "generalLanguage",
+    "label": "Language",
+    "tabIndex": 1,
+    "category": "General",
+    "icon": "language",
+    "description": "UI language and locale settings",
+    "keywords": ["language", "locale", "region", "translate", "translation", "ui"]
+  },
+  {
+    "section": "generalSounds",
+    "label": "Sounds",
+    "tabIndex": 1,
+    "category": "General",
+    "icon": "notification_sound",
+    "description": "System sound effects for battery and pomodoro",
+    "keywords": ["audio", "battery", "beep", "notification", "pomodoro", "sfx", "sound", "theme"]
+  },
+  {
+    "section": "generalTime",
+    "label": "Time & Date",
+    "tabIndex": 1,
+    "category": "General",
+    "icon": "nest_clock_farsight_analog",
+    "description": "Clock format, date format and pomodoro timer settings",
+    "keywords": ["break", "clock", "date", "focus", "format", "hours", "minutes", "pomodoro", "seconds", "time", "timer"]
+  },
+  {
+    "section": "barNotifications",
+    "label": "Notifications",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "notifications",
+    "description": "Notification indicator settings in the bar",
+    "keywords": ["badge", "bar", "bell", "count", "indicator", "notification", "unread"]
+  },
+  {
+    "section": "barPositioning",
+    "label": "Bar Positioning",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "spoke",
+    "description": "Bar position, style, autohide and screen assignment",
+    "keywords": ["autohide", "bar", "bottom", "corner", "float", "hide", "monitor", "position", "screen", "style", "super", "top", "vertical"]
+  },
+  {
+    "section": "barTray",
+    "label": "Tray",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "shelf_auto_hide",
+    "description": "System tray icon filtering and pinning",
+    "keywords": ["filter", "icon", "passive", "pin", "pinned", "system tray", "tray", "whitelist"]
+  },
+  {
+    "section": "barUtilityButtons",
+    "label": "Utility Buttons",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "widgets",
+    "description": "Toggle bar utility buttons: screen snip, color picker, mic, dark mode",
+    "keywords": ["bar", "button", "color picker", "dark mode", "keyboard", "mic", "microphone", "performance", "record", "screen", "screenshot", "snip", "toggle", "utility"]
+  },
+  {
+    "section": "barWeather",
+    "label": "Weather in Bar",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "cloud",
+    "description": "Weather widget in the bar with GPS or city-based location",
+    "keywords": ["bar", "city", "climate", "forecast", "gps", "location", "metric", "temperature", "units", "weather"]
+  },
+  {
+    "section": "barWorkspaces",
+    "label": "Workspaces",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "workspaces",
+    "description": "Workspace indicator icons, numbers and appearance in bar",
+    "keywords": ["app icons", "bar", "indicator", "nerdfont", "numbers", "shown", "workspace"]
+  },
+  {
+    "section": "barTooltips",
+    "label": "Tooltips",
+    "tabIndex": 2,
+    "category": "Bar",
+    "icon": "tooltip",
+    "description": "Bar tooltip click-to-show behavior",
+    "keywords": ["bar", "click", "hover", "show", "tooltip"]
+  },
+  {
+    "section": "backgroundWallpaperTransition",
+    "label": "Wallpaper Transition",
+    "tabIndex": 3,
+    "category": "Background",
+    "icon": "wallpaper_slideshow",
+    "description": "Animate wallpaper changes with transition effects",
+    "keywords": ["animate", "animation", "background", "crossfade", "diamond", "effect", "fade", "radial", "random", "shuffle", "slash", "transition", "wallpaper", "wave", "wipe"]
+  },
+  {
+    "section": "backgroundWidgetClock",
+    "label": "Widget: Clock",
+    "tabIndex": 3,
+    "category": "Background",
+    "icon": "clock_loader_40",
+    "description": "Desktop clock widget with digital and cookie styles",
+    "keywords": ["analog", "background", "clock", "cookie", "date", "desktop", "digital", "font", "hand", "hour", "lock", "minute", "second", "style", "time", "widget"]
+  },
+  {
+    "section": "backgroundWidgetWeather",
+    "label": "Widget: Weather",
+    "tabIndex": 3,
+    "category": "Background",
+    "icon": "weather_mix",
+    "description": "Weather widget on the desktop background",
+    "keywords": ["background", "climate", "desktop", "forecast", "temperature", "weather", "widget"]
+  },
+  {
+    "section": "interfaceIcons",
+    "label": "Icons",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "palette",
+    "description": "Icon theme and monochrome icon tinting",
+    "keywords": ["breeze", "icon", "monochrome", "recolor", "theme", "tint"]
+  },
+  {
+    "section": "interfaceCheatSheet",
+    "label": "Cheat Sheet",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "keyboard",
+    "description": "Keybind cheat sheet appearance and super key symbol",
+    "keywords": ["cheat", "font", "keybind", "keyboard", "mac", "shortcut", "split", "super", "symbol"]
+  },
+  {
+    "section": "interfaceDock",
+    "label": "Dock",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "call_to_action",
+    "description": "Dock enable, pinned apps, autohide and preview settings",
+    "keywords": ["app", "autohide", "dock", "icon", "launcher", "pin", "pinned", "preview", "taskbar"]
+  },
+  {
+    "section": "interfaceLockScreen",
+    "label": "Lock Screen",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "lock",
+    "description": "Lock screen blur, clock, hyprlock and keyring settings",
+    "keywords": ["blur", "clock", "hyprlock", "keyring", "lock", "password", "screen", "security", "unlock"]
+  },
+  {
+    "section": "interfaceNotifications",
+    "label": "Notifications",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "notifications",
+    "description": "Notification timeout and monitor assignment",
+    "keywords": ["monitor", "notification", "popup", "screen", "timeout"]
+  },
+  {
+    "section": "interfaceOverlayGeneral",
+    "label": "Overlay: General",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "select_window",
+    "description": "Overlay animation, screen darkening and clickthrough opacity",
+    "keywords": ["animation", "clickthrough", "darken", "opacity", "overlay", "zoom"]
+  },
+  {
+    "section": "interfaceOverlayCrosshair",
+    "label": "Overlay: Crosshair",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "point_scan",
+    "description": "Crosshair overlay with Valorant format support",
+    "keywords": ["crosshair", "cursor", "overlay", "scope", "valorant"]
+  },
+  {
+    "section": "interfaceOverlayFloatingImage",
+    "label": "Overlay: Floating Image",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "point_scan",
+    "description": "Floating GIF or image overlay on screen",
+    "keywords": ["floating", "gif", "image", "overlay", "scale"]
+  },
+  {
+    "section": "interfaceRegionSelector",
+    "label": "Region Selector",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "screenshot_frame_2",
+    "description": "Screen snipping and Google Lens region selector settings",
+    "keywords": ["annotation", "capture", "circle", "google lens", "region", "satty", "screenshot", "selection", "snip"]
+  },
+  {
+    "section": "interfaceSidebars",
+    "label": "Sidebars",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "side_navigation",
+    "description": "Sidebar quick toggles, sliders and corner open behavior",
+    "keywords": ["bluetooth", "brightness", "corner", "mic", "network", "panel", "quick toggles", "sidebar", "sliders", "volume", "wifi"]
+  },
+  {
+    "section": "interfaceOsd",
+    "label": "On-Screen Display",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "voting_chip",
+    "description": "OSD popup timeout",
+    "keywords": ["display", "on screen", "osd", "popup", "timeout", "volume"]
+  },
+  {
+    "section": "interfaceOverview",
+    "label": "Overview",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "overview_key",
+    "description": "Workspace overview scale, rows, columns and icon centering",
+    "keywords": ["columns", "grid", "icons", "overview", "rows", "scale", "workspace"]
+  },
+  {
+    "section": "interfaceWallpaperSelector",
+    "label": "Wallpaper Selector",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "wallpaper_slideshow",
+    "description": "Use system file dialog for wallpaper selection",
+    "keywords": ["dialog", "file", "picker", "selector", "system", "wallpaper"]
+  },
+  {
+    "section": "interfaceFonts",
+    "label": "Fonts",
+    "tabIndex": 4,
+    "category": "Interface",
+    "icon": "text_format",
+    "description": "Font family for UI, title, monospace and reading fonts",
+    "keywords": ["expressive", "family", "font", "monospace", "nerd font", "reading", "title", "typeface"]
+  },
+  {
+    "section": "servicesNetworking",
+    "label": "Networking",
+    "tabIndex": 5,
+    "category": "Services",
+    "icon": "cell_tower",
+    "description": "User agent string for network requests",
+    "keywords": ["agent", "browser", "network", "request", "user agent"]
+  },
+  {
+    "section": "servicesResources",
+    "label": "Resources",
+    "tabIndex": 5,
+    "category": "Services",
+    "icon": "memory",
+    "description": "System resource monitor update interval and history length",
+    "keywords": ["cpu", "history", "interval", "memory", "monitor", "ram", "resources", "swap", "update"]
+  },
+  {
+    "section": "servicesSavePaths",
+    "label": "Save Paths",
+    "tabIndex": 5,
+    "category": "Services",
+    "icon": "file_open",
+    "description": "Save paths for screen recordings and screenshots",
+    "keywords": ["clipboard", "directory", "folder", "path", "record", "save", "screenshot", "snip", "video"]
+  },
+  {
+    "section": "servicesSearch",
+    "label": "Search",
+    "tabIndex": 5,
+    "category": "Services",
+    "icon": "search",
+    "description": "Launcher search engine, prefixes and excluded sites",
+    "keywords": ["clipboard", "emoji", "engine", "exclude", "fuzzy", "google", "launcher", "math", "prefix", "search", "shell", "web"]
+  },
+  {
+    "section": "servicesWeather",
+    "label": "Weather Service",
+    "tabIndex": 5,
+    "category": "Services",
+    "icon": "weather_mix",
+    "description": "Weather service location, units and fetch interval",
+    "keywords": ["celsius", "city", "climate", "fahrenheit", "fetch", "forecast", "gps", "interval", "location", "metric", "temperature", "units", "weather"]
+  },
+  {
+    "section": "advancedColorGeneration",
+    "label": "Color Generation",
+    "tabIndex": 6,
+    "category": "Advanced",
+    "icon": "colors",
+    "description": "Matugen color palette type and accent color settings",
+    "keywords": ["accent", "color", "expressive", "fidelity", "generation", "matugen", "monochrome", "palette", "scheme", "tonal", "wallpaper theming"]
+  },
+  {
+    "section": "aboutDistro",
+    "label": "Distro Info",
+    "tabIndex": 7,
+    "category": "About",
+    "icon": "box",
+    "description": "Distribution and system information",
+    "keywords": ["about", "arch", "distro", "info", "linux", "os", "system", "version"]
+  },
+  {
+    "section": "aboutDotfiles",
+    "label": "Dotfiles",
+    "tabIndex": 7,
+    "category": "About",
+    "icon": "folder_managed",
+    "description": "Dotfiles directory and shell configuration info",
+    "keywords": ["about", "config", "dotfiles", "folder", "path", "shell", "version"]
+  }
+]

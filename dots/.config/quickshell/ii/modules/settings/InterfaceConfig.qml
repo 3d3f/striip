@@ -8,6 +8,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "interfaceIcons"
         icon: "palette"
         title: Translation.tr("Icons")
         ContentSubsection {
@@ -36,6 +37,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceCheatSheet"
         icon: "keyboard"
         title: Translation.tr("Cheat sheet")
 
@@ -128,6 +130,7 @@ ContentPage {
         }
     }
     ContentSection {
+        settingKey: "interfaceDock"
         icon: "call_to_action"
         title: Translation.tr("Dock")
 
@@ -213,6 +216,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceLockScreen"
         icon: "lock"
         title: Translation.tr("Lock screen")
 
@@ -322,6 +326,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceNotifications"
         icon: "notifications"
         title: Translation.tr("Notifications")
 
@@ -364,6 +369,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceOverlayGeneral"
         icon: "select_window"
         title: Translation.tr("Overlay: General")
 
@@ -386,6 +392,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceOverlayCrosshair"
         icon: "point_scan"
         title: Translation.tr("Overlay: Crosshair")
 
@@ -425,6 +432,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceOverlayFloatingImage"
         icon: "point_scan"
         title: Translation.tr("Overlay: Floating Image")
 
@@ -440,6 +448,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceRegionSelector"
         icon: "screenshot_frame_2"
         title: Translation.tr("Region selector (screen snipping/Google Lens)")
 
@@ -523,6 +532,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceSidebars"
         icon: "side_navigation"
         title: Translation.tr("Sidebars")
 
@@ -721,6 +731,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceOsd"
         icon: "voting_chip"
         title: Translation.tr("On-screen display")
 
@@ -738,6 +749,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceOverview"
         icon: "overview_key"
         title: Translation.tr("Overview")
 
@@ -835,6 +847,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceWallpaperSelector"
         icon: "wallpaper_slideshow"
         title: Translation.tr("Wallpaper selector")
 
@@ -849,6 +862,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "interfaceFonts"
         icon: "text_format"
         title: Translation.tr("Fonts")
 

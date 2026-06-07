@@ -8,6 +8,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "servicesNetworking"
         icon: "cell_tower"
         title: Translation.tr("Networking")
 
@@ -23,6 +24,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "servicesResources"
         icon: "memory"
         title: Translation.tr("Resources")
 
@@ -41,6 +43,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "servicesSavePaths"
         icon: "file_open"
         title: Translation.tr("Save paths")
 
@@ -66,6 +69,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "servicesSearch"
         icon: "search"
         title: Translation.tr("Search")
 
@@ -185,6 +189,7 @@ ContentPage {
     // }
 
     ContentSection {
+        settingKey: "servicesWeather"
         icon: "weather_mix"
         title: Translation.tr("Weather")
         ConfigRow {

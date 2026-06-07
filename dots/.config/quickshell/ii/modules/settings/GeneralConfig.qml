@@ -11,6 +11,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "generalAudio"
         icon: "volume_up"
         title: Translation.tr("Audio")
 
@@ -53,6 +54,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "generalBattery"
         icon: "battery_android_full"
         title: Translation.tr("Battery")
 
@@ -124,6 +126,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "generalLanguage"
         icon: "language"
         title: Translation.tr("Language")
 
@@ -161,6 +164,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "generalSounds"
         icon: "notification_sound"
         title: Translation.tr("Sounds")
         ConfigRow {
@@ -185,6 +189,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "generalTime"
         icon: "nest_clock_farsight_analog"
         title: Translation.tr("Time")
 

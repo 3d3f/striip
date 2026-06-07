@@ -45,6 +45,7 @@ ContentPage {
 
     // Wallpaper selection
     ContentSection {
+        settingKey: "quickWallpaperColors"
         icon: "format_paint"
         title: Translation.tr("Wallpaper & Colors")
         Layout.fillWidth: true
@@ -188,6 +189,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "quickBarScreen"
         icon: "screenshot_monitor"
         title: Translation.tr("Bar & screen")
 

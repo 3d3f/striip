@@ -7,6 +7,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "advancedColorGeneration"
         icon: "colors"
         title: Translation.tr("Color generation")
 

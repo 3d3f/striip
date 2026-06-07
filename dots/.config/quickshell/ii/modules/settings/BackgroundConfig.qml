@@ -8,6 +8,7 @@ ContentPage {
     forceWidth: true
 
     ContentSection {
+        settingKey: "backgroundWallpaperTransition"
         icon: "wallpaper_slideshow"
         title: Translation.tr("Wallpaper transition")
 
@@ -95,6 +96,7 @@ ContentPage {
 
     ContentSection {
         id: settingsClock
+        settingKey: "backgroundWidgetClock"
         icon: "clock_loader_40"
         title: Translation.tr("Widget: Clock")
 
@@ -599,6 +601,7 @@ ContentPage {
     }
 
     ContentSection {
+        settingKey: "backgroundWidgetWeather"
         icon: "weather_mix"
         title: Translation.tr("Widget: Weather")
 
