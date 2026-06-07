@@ -1,7 +1,10 @@
 import QtQuick
+import QtQuick.Layouts
+import Quickshell
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.functions
 
 ContentPage {
     forceWidth: true
@@ -90,7 +93,49 @@ ContentPage {
             }
         }
     }
+    NoticeBox {
+        Layout.fillWidth: true
+        text: Translation.tr('Not all options are available in this app. You can also edit the config file directly at %1.').arg(Directories.shellConfigPath)
 
+        Item {
+            Layout.fillWidth: true
+        }
+        RippleButtonWithIcon {
+            id: openFileButton
+            Layout.fillWidth: false
+            buttonRadius: Appearance.rounding.small
+            materialIcon: "edit"
+            mainText: Translation.tr("Open file")
+            onClicked: {
+                Qt.openUrlExternally(`${Directories.config}/illogical-impulse/config.json`);
+            }
+            colBackground: ColorUtils.transparentize(Appearance.colors.colPrimaryContainer)
+            colBackgroundHover: Appearance.colors.colPrimaryContainerHover
+            colRipple: Appearance.colors.colPrimaryContainerActive
+        }
+        RippleButtonWithIcon {
+            id: copyPathButton
+            property bool justCopied: false
+            Layout.fillWidth: false
+            buttonRadius: Appearance.rounding.small
+            materialIcon: justCopied ? "check" : "content_copy"
+            mainText: justCopied ? Translation.tr("Path copied") : Translation.tr("Copy path")
+            onClicked: {
+                copyPathButton.justCopied = true
+                Quickshell.clipboardText = CF.FileUtils.trimFileProtocol(`${Directories.config}/illogical-impulse/config.json`);
+                revertTextTimer.restart();
+            }
+            colBackground: ColorUtils.transparentize(Appearance.colors.colPrimaryContainer)
+            colBackgroundHover: Appearance.colors.colPrimaryContainerHover
+            colRipple: Appearance.colors.colPrimaryContainerActive
 
-
+            Timer {
+                id: revertTextTimer
+                interval: 1500
+                onTriggered: {
+                    copyPathButton.justCopied = false
+                }
+            }
+        }
+    }
 }
