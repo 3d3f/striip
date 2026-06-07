@@ -244,7 +244,7 @@ ApplicationWindow {
                 id: navRailWrapper
                 Layout.fillHeight: true
                 Layout.margins: 5
-                implicitWidth: navRail.expanded ? 150 : 56 // 56 is FloatingActionButton baseSize
+                implicitWidth: navRail.expanded ? 150 : 56 // 56 is old Config File FloatingActionButton baseSize
                 Behavior on implicitWidth {
                     animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
                 }
