@@ -270,15 +270,6 @@ ContentPage {
             }
         }
 
-        ConfigSwitch {
-            buttonIcon: "colors"
-            text: Translation.tr('Tint app icons')
-            checked: Config.options.bar.workspaces.monochromeIcons
-            onCheckedChanged: {
-                Config.options.bar.workspaces.monochromeIcons = checked;
-            }
-        }
-
         ConfigSpinBox {
             icon: "view_column"
             text: Translation.tr("Workspaces shown")
