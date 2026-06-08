@@ -257,14 +257,11 @@ ApplicationWindow {
                     }
                     spacing: 10
                     expanded: root.width > 900
-                    
-                    NavigationRailExpandButton {
-                        focus: root.visible
-                    }
 
                     NavigationRailTabArray {
                         currentIndex: root.currentPage
                         expanded: navRail.expanded
+                        Layout.topMargin: 5
                         Repeater {
                             model: root.pages
                             NavigationRailButton {
