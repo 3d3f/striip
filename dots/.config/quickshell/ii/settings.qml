@@ -82,6 +82,7 @@ ApplicationWindow {
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
         Config.readWriteDelay = 0 // Settings app always only sets one var at a time so delay isn't needed
+        searchInput.forceActiveFocus()
     }
 
     minimumWidth: 750
@@ -113,6 +114,12 @@ ApplicationWindow {
                 else if (event.key === Qt.Key_Backtab) {
                     root.currentPage = (root.currentPage - 1 + root.pages.length) % root.pages.length;
                     event.accepted = true;
+                }
+                if ((event.modifiers === Qt.ControlModifier && event.key === Qt.Key_F)
+                    || (event.key === Qt.Key_Slash && !searchInput.activeFocus)) {
+                    searchInput.forceActiveFocus()
+                    searchInput.selectAll()
+                    event.accepted = true
                 }
             }
         }
